@@ -9,7 +9,7 @@ sequenceDiagram
 
     browser ->> server: GET main.css
     activate server 
-    server ->> browser: response main.css
+    server ->> browser: response: main.css
     deactivate server
 
     browser ->> server: GET spa.js
