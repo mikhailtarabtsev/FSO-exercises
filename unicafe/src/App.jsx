@@ -2,8 +2,19 @@ import { useState } from 'react'
 
 const Button = (props) => (<button onClick={props.handler}>{props.text}</button>)
 
-const Statistics = (props) => (
-  <>
+const Statistics = (props) => {
+  if (props.score.length == 0) {
+
+    return (
+      <>
+      <h2>statistics</h2>
+      <p>No feedback has been received</p>
+      </>
+    )
+  }
+  else {
+    return(
+      <>
   <h2>statistics</h2>
   <p>good: {props.good}</p>
   <p>neutral: {props.neutral}</p>
@@ -14,7 +25,12 @@ const Statistics = (props) => (
   </>
 
 
-)
+    )
+  }
+  
+}
+
+
 
 const App = () => {
   const [good, setGood] = useState(0)
@@ -46,7 +62,8 @@ const App = () => {
       <Statistics good={good} 
                neutral={neutral}
                bad={bad}
-               total={total} 
+               total={total}
+               score = {score}
               
                average={average ? average : "No feedback received"} 
                positive={positive ? (positive + " %" ) : "No feedback received"} />
