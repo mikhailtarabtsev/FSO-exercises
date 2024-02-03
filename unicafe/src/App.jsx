@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 const Button = (props) => (<button onClick={props.handler}>{props.text}</button>)
 
-const Display = (props) => (
-  <div>
+const Statistics = (props) => (
+  <>
   <h2>statistics</h2>
   <p>good: {props.good}</p>
   <p>neutral: {props.neutral}</p>
@@ -11,7 +11,7 @@ const Display = (props) => (
   <p>total: {props.total}</p>
   <p>average: {props.average}</p>
   <p>postitive : {props.positive}</p>
-  </div>
+  </>
 
 
 )
@@ -43,7 +43,7 @@ const App = () => {
       <Button handler={()=>handler(good, setGood, 1)} text="good" />
       <Button handler={()=>handler(neutral, setNeutral, 0)} text="neutral" />
       <Button handler={()=>handler(bad, setBad, -1)} text="bad" />
-      <Display good={good} 
+      <Statistics good={good} 
                neutral={neutral}
                bad={bad}
                total={total} 
