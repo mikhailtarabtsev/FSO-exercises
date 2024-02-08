@@ -15,8 +15,9 @@ const App = () => {
   const [selected, setSelected] = useState(0)
 
   const scoreBoard = new Uint16Array(anecdotes.length)
-
   const  [score, setScore] = useState(scoreBoard)
+
+  const [voted, setVoted] = useState(0)
   
 
   const jokeHandler = () => {
@@ -26,16 +27,21 @@ const App = () => {
   }
 
   const voteHandler = () =>{
-
     const copy = [...score]
     copy [selected] += 1
     setScore(copy)
+
+    const updatedHighScore = copy.findIndex(scores => scores === Math.max(...copy))
+    
+
+    setVoted(updatedHighScore)
   }
 
 
 
   return (
     <>
+    <h2>Anecdote of the day</h2>
     <div>
       {anecdotes[selected]}
     </div>
@@ -44,6 +50,9 @@ const App = () => {
     </div>
     <button onClick={voteHandler}>vote</button>
     <button onClick={jokeHandler} >next anecdote</button>
+
+    <h2>Anecdote with the most votes</h2>
+    <div>{anecdotes[voted]}</div>
     </>
     
   )
