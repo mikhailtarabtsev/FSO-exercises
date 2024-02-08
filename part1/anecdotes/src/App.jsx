@@ -14,10 +14,22 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
 
+  const scoreBoard = new Uint16Array(anecdotes.length)
+
+  const  [score, setScore] = useState(scoreBoard)
+  
+
   const jokeHandler = () => {
 
     const random = Math.floor(Math.random() * (anecdotes.length-1))
     setSelected(random)
+  }
+
+  const voteHandler = () =>{
+
+    const copy = [...score]
+    copy [selected] += 1
+    setScore(copy)
   }
 
 
@@ -27,6 +39,10 @@ const App = () => {
     <div>
       {anecdotes[selected]}
     </div>
+    <div>
+      has {score[selected]} votes.
+    </div>
+    <button onClick={voteHandler}>vote</button>
     <button onClick={jokeHandler} >next anecdote</button>
     </>
     
