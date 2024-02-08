@@ -32,8 +32,6 @@ const App = () => {
     setScore(copy)
 
     const updatedHighScore = copy.findIndex(scores => scores === Math.max(...copy))
-    
-
     setVoted(updatedHighScore)
   }
 
