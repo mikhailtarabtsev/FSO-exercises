@@ -8,18 +8,21 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const submitHandler = (event) => {
     event.preventDefault();
-    const personObject = {
-      name: newName,
-      id: persons.length+1
+    if (persons.find(person => person.name === newName)){
+      alert(`${newName} already exists in your contacts`)
     }
+    else
+    {const personObject = {
+        name: newName,
+        id: persons.length+1
+      }
     setPersons(persons.concat(personObject))
+    }
     setNewName("")
-
   }
-  const changeHandler = (event) => {
-    console.log(event.target.value)
-    setNewName(event.target.value)
 
+  const changeHandler = (event) => {
+    setNewName(event.target.value)
   }
 
   return (
