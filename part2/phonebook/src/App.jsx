@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from "./components/filter"
+import Form from "./components/personForm"
+import Contacts from './components/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -7,87 +10,34 @@ const App = () => {
     { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ])
-
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
   const [search, setSearch] = useState("")
   const [found, setFound] = useState([])
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    if (persons.find(person => person.name === newName)){
-      alert(`${newName} already exists in your contacts`)
-    }
-    else if (persons.find(person => person.number === newNumber)){
-
-      alert(`${newNumber} is already registered in your contacts`)
-    }
-    else
-    {const personObject = {
-        name: newName,
-        number: newNumber,
-        id: persons.length+1
-      }
-    setPersons(persons.concat(personObject))
-    }
-    setNewName("")
-    setNewNumber("")
-  }
-
-  const nameHandler = (event) => {
-    setNewName(event.target.value)
-  }
-  const numberHandler = (event) => {
-    setNewNumber(event.target.value)
-  }
-  const searchHandler = (event) => {
-    const searchValue = event.target.value
-    setSearch(searchValue)
-
-    setFound(persons.filter(person => person.name.toLowerCase().includes(searchValue.toLowerCase())))
-    
-  }
-
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with
-        <input type="text"
-              value={search}
-              onChange={searchHandler} />
-      </div>
+
+      <Filter search={search}
+              setSearch={setSearch}
+              persons={persons}
+              setFound={setFound} />
       
-      <form>
-        <div>
-          name: <input 
-                value={newName}
-                onChange={nameHandler} />
-        </div>
-        <div>
-          number: <input 
-                  value={newNumber}
-                  onChange={numberHandler} />
-        </div>
-        <div>
-          <button 
-          onClick={submitHandler}
-          type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {found.length > 0 ? (
-      found.map((person) => (
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      ))
-    ) : (
-      persons.map((person) => (
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      ))
-    )}
+      <h3>Add a new contact</h3>
+
+      <Form persons ={persons}
+            setPersons={setPersons}
+            newName={newName}
+            setNewName={setNewName}
+            newNumber={newNumber}
+            setNewNumber={setNewNumber}/>
+
+      <h3>Numbers</h3>
+
+      <Contacts found={found}
+                persons={persons}/>
+   
     </div>
   )
 }
