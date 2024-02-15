@@ -1,17 +1,21 @@
+import Contact from "./contact"
+
 const Contacts = ({found, persons}) => {
 return(
     <>
     {found.length > 0 ? (
         found.map((person) => (
-          <div key={person.id}>
-            {person.name} {person.number}
-          </div>
+          <Contact key={person.id}
+          person = {person}
+          />
         ))
       ) : (
         persons.map((person) => (
-          <div key={person.id}>
-            {person.name} {person.number}
-          </div>
+          <Contact key={person.id}
+                   person = {person}
+          />
+           
+          
         ))
       )}
       </>

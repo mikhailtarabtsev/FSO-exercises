@@ -1,13 +1,8 @@
-const Filter =({search, setSearch, persons, setFound})=> {
-    const searchHandler = (event) => {
-        const searchValue = event.target.value
-        setSearch(searchValue)
-        setFound(persons.filter(person => person.name.toLowerCase().includes(searchValue.toLowerCase())))
-        
-      }
+const Filter =({search, handler})=> {
+    
     return(
     <div>filter shown with: <input value={search}
-                                   onChange={searchHandler} />
+                                   onChange={(event)=> handler("filter", event)} />
     </div>
     )
 }

@@ -1,49 +1,20 @@
-const Form = ({persons, setPersons, newName, setNewName, newNumber, setNewNumber})=>{
-
-    const nameHandler = (event) => {
-        setNewName(event.target.value)
-         }
-    const numberHandler = (event) => {
-        setNewNumber(event.target.value)
-        }
-
-    const submitHandler = (event) => {
-        event.preventDefault();
-        if (persons.find(person => person.name === newName)){
-            alert(`${newName} already exists in your contacts`)
-        }
-        else if (persons.find(person => person.number === newNumber)){
-
-            alert(`${newNumber} is already registered in your contacts`)
-        }
-        else
-        {const personObject = {
-            name: newName,
-            number: newNumber,
-            id: persons.length+1
-            }
-        setPersons(persons.concat(personObject))
-        }
-        setNewName("")
-        setNewNumber("")
-        }
-    
+const Form = ({newName, newNumber, handler})=>{
 
     return(
         <form>
         <div>
-          name: <input 
+          name: <input type="text" 
                 value={newName}
-                onChange={nameHandler} />
+                onChange={(event)=> handler("name", event)} />
         </div>
         <div>
-          number: <input 
+          number: <input type="tel" 
                   value={newNumber}
-                  onChange={numberHandler} />
+                  onChange={(event)=> handler("phone", event)} />
         </div>
         <div>
           <button 
-          onClick={submitHandler}
+          onClick={(event)=> handler("submit", event)}
           type="submit">add</button>
         </div>
       </form>
