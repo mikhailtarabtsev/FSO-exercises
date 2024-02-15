@@ -6,7 +6,7 @@ return(
     {found.length > 0 ? (
         found.map((person) => (
           <Contact key={person.id}
-          person = {person}
+                   person = {person}
           />
         ))
       ) : (
