@@ -22,7 +22,6 @@ const App = () => {
   },[])
 
   const deleteHandler = (id) =>{
-
     contactService
       .remove(id)
       .then(res => {
@@ -34,15 +33,26 @@ const App = () => {
 
  const formSubmit = (event) =>{ 
   event.preventDefault();
-  if (persons.find(person => person.name === newName)){
-      alert(`${newName} already exists in your contacts`)
-  }
-  else
-    {const personObject = {
+  const personObject = {
         name: newName,
         number: newNumber,
         id:  `${persons.length+1}`
         }
+  const duplicate = persons.find(person => person.name === newName)
+
+  if (duplicate){
+     if (window.confirm(`${duplicate.name} is already in your contact list. Would you like to update their number?`))
+      {
+      contactService
+          .update(duplicate.id, personObject)
+          .then(res => {
+            setPersons((prevPersons) => prevPersons.map( person => person.id !== duplicate.id ? person : res ))
+            })
+          }
+     }
+  
+  else
+    {
     contactService 
         .create(personObject)
         .then(res=> {
