@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
@@ -21,24 +16,19 @@
       "id": "4"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "sdasd",
       "number": "asdasdasd"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "dadasd",
       "number": "asdasdasdasd"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "pickle rick",
       "number": "1232313"
-    },
-    {
-      "id": 8,
-      "name": "uncle mike",
-      "number": "231233"
     }
   ]
 }

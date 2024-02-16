@@ -21,6 +21,16 @@ const App = () => {
       })
   },[])
 
+  const deleteHandler = (id) =>{
+
+    contactService
+      .remove(id)
+      .then(res => {
+        setPersons((prevPersons) => prevPersons.filter(person => person.id !== id))
+      })
+      .catch(err => console.log(err.data))
+  }
+
 
  const formSubmit = (event) =>{ 
   event.preventDefault();
@@ -31,7 +41,7 @@ const App = () => {
     {const personObject = {
         name: newName,
         number: newNumber,
-        id: persons.length+1
+        id:  `${persons.length+1}`
         }
     contactService 
         .create(personObject)
@@ -82,7 +92,8 @@ const App = () => {
       <h3>Numbers</h3>
 
       <Contacts found={found}
-                persons={persons}/>
+                persons={persons}
+                deleteHandler = {deleteHandler}/>
    
     </div>
   )
