@@ -20,15 +20,36 @@ const App = () => {
         setPersons(res.data)
       })
   },[])
+
+
+ const formSubmit = (event) =>{ 
+  event.preventDefault();
+  if (persons.find(person => person.name === newName)){
+      alert(`${newName} already exists in your contacts`)
+  }
+  else
+    {const personObject = {
+        name: newName,
+        number: newNumber,
+        id: persons.length+1
+        }
+    axios 
+        .post("http://localhost:3001/persons", personObject)
+        .then(res=> {
+          setPersons(persons.concat(personObject))
+          setNewName("")
+          setNewNumber("");
+        })
+    
+    }
+    
+ }
   
   const changeHandler = (action, event)=> {
-
     const inputValue = event.target.value
-
     switch (action){
-      
       case "phone" : 
-         setNewNumber(inputValue);
+        setNewNumber(inputValue);
         break;
       case "name":
         setNewName(inputValue);
@@ -37,26 +58,6 @@ const App = () => {
         setSearch(searchValue)
         setFound(persons.filter(person => person.name.toLowerCase().includes(searchValue.toLowerCase())));
         break;
-      case "submit" : event.preventDefault();
-        if (persons.find(person => person.name === newName)){
-            alert(`${newName} already exists in your contacts`)
-        }
-        else if (persons.find(person => person.number === newNumber)){
-
-            alert(`${newNumber} is already registered in your contacts`)
-        }
-        else
-        {const personObject = {
-            name: newName,
-            number: newNumber,
-            id: persons.length+1
-            }
-        setPersons(persons.concat(personObject))
-        }
-        setNewName("")
-        setNewNumber("");
-        break;
-        
       default: console.log("This isn't supposed to happen")
     }
   }
@@ -74,7 +75,9 @@ const App = () => {
       <Form persons ={persons}
             newName = {newName}
             newNumber={newNumber}
-            handler = {changeHandler}/>
+            setPersons = {setPersons}
+            handler = {changeHandler}
+            submit = {formSubmit}/>
 
       <h3>Numbers</h3>
 

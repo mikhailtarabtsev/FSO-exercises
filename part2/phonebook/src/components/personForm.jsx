@@ -1,4 +1,6 @@
-const Form = ({newName, newNumber, handler})=>{
+const Form = ({newName, newNumber, handler, submit, setPersons})=>{
+
+  
 
     return(
         <form>
@@ -14,7 +16,7 @@ const Form = ({newName, newNumber, handler})=>{
         </div>
         <div>
           <button 
-          onClick={(event)=> handler("submit", event)}
+          onClick={(event)=> submit(event)}
           type="submit">add</button>
         </div>
       </form>
