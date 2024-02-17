@@ -11,7 +11,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [search, setSearch] = useState("")
   const [found, setFound] = useState([])
-  const [message, setMessage] = useState(null)
+  const [message, setMessage] = useState({
+    text:null,
+    error:false,
+    isRendered:false
+  })
 
   
 
@@ -28,6 +32,12 @@ const App = () => {
       .remove(id)
       .then(res => {
         setPersons((prevPersons) => prevPersons.filter(person => person.id !== id))
+        setMessage({
+          text:`Contact has been deleted succesfully!`,
+          error: false,
+          isRendered:true
+      })
+        setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
       })
       .catch(err => console.log(err.data))
   }
@@ -48,9 +58,19 @@ const App = () => {
           .update(duplicate.id, personObject)
           .then(res => {
             setPersons((prevPersons) => prevPersons.map( person => person.id !== duplicate.id ? person : res ))
-            setMessage(`"${duplicate.name}" contact has been updated successfully!`)
-            setTimeout(()=>setMessage(null), 5000)
+            setMessage({
+              text:`"${duplicate.name}" contact has been updated successfully!`,
+              error: false,
+              isRendered:true
+          })
+            setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
             })
+          .catch(res => {
+            setMessage({
+            text:`"${duplicate.name}" contact has already been deleted from server!`,
+            error: true,
+            isRendered:true})
+            setTimeout(()=>setMessage({...message, isRendered : false}), 5000) })
           }
      }
   
@@ -59,10 +79,15 @@ const App = () => {
     contactService 
         .create(personObject)
         .then(res=> {
-          console.log(res)
+          setMessage({
+            text:`"${personObject.name}" contact has been created!`,
+            error: false,
+            isRendered:true
+        })
           setPersons(persons.concat(res))
           setNewName("")
           setNewNumber("");
+          setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
         })
     
     }

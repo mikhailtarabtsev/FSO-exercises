@@ -2,24 +2,39 @@ const Message = ({message}) => {
 
     const messageSuccessStyle = {
         backgroundColor: "grey",
-        color : "green",
         fontSize: "2em",
         fontStyle: "italic",
         borderStyle: "solid",
         borderWidth: 4,
         borderRadius : 10,
-        borderColor: "green",
         textAlign: "center",
         width: "10em",
-        margin: 20
+        margin: 20,
+        color : "green",
+        borderColor: "green"
     }
 
-    if(!message){
+    const messageFailStyle = {
+        ...messageSuccessStyle,
+        color:"red",
+        borderColor:"red"
+    }
+
+    if(!message.isRendered){
         return null
     }
-    return(
-    <div style={messageSuccessStyle}>{message}</div>
-        )
+    if(message.error){
+            return(
+                <div style={messageFailStyle}>{message.text}</div>
+            )
+        }
+        return(
+            <div style={messageSuccessStyle}>{message.text}</div>
+            )
+    
+    
+    
 
+    
 }
 export default Message
