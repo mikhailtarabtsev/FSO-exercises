@@ -3,6 +3,7 @@ import Filter from "./components/filter"
 import Form from "./components/personForm"
 import Contacts from './components/persons'
 import contactService from './services/contact'
+import Message from './components/notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -10,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [search, setSearch] = useState("")
   const [found, setFound] = useState([])
+  const [message, setMessage] = useState(null)
 
   
 
@@ -35,8 +37,7 @@ const App = () => {
   event.preventDefault();
   const personObject = {
         name: newName,
-        number: newNumber,
-        id:  `${persons.length+1}`
+        number: newNumber
         }
   const duplicate = persons.find(person => person.name === newName)
 
@@ -47,6 +48,8 @@ const App = () => {
           .update(duplicate.id, personObject)
           .then(res => {
             setPersons((prevPersons) => prevPersons.map( person => person.id !== duplicate.id ? person : res ))
+            setMessage(`"${duplicate.name}" contact has been updated successfully!`)
+            setTimeout(()=>setMessage(null), 5000)
             })
           }
      }
@@ -56,7 +59,8 @@ const App = () => {
     contactService 
         .create(personObject)
         .then(res=> {
-          setPersons(persons.concat(personObject))
+          console.log(res)
+          setPersons(persons.concat(res))
           setNewName("")
           setNewNumber("");
         })
@@ -91,6 +95,7 @@ const App = () => {
              />
       
       <h3>Add a new contact</h3>
+      <Message message={message} />
 
       <Form persons ={persons}
             newName = {newName}
