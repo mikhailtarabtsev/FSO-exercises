@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from "axios"
+import countryService from './services/countries'
 import Display from './components/display'
 
 
@@ -16,10 +16,10 @@ const changeHandler = (event=>{
 })
 
 useEffect(()=>{
-  console.log("effect")
-  axios
-      .get("https://studies.cs.helsinki.fi/restcountries/api/all")
-      .then(res => setCountries(res.data) )},[])
+  countryService.getAll()
+  .then(res=>setCountries(res))
+}
+  ,[])
 
 return (
   <>
