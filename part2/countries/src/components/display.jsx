@@ -1,10 +1,10 @@
 import Country from "./country"
 
-const Display = ({result, handler}) => {
+const Display = ({result, handler, weather, setWeather}) => {
 
     if (result.length===1){
         return(
-            <Country result={result[0]}/>
+            <Country result={result[0]} weather= {weather} setWeather = {setWeather}/>
         )
     }
     else if(result.length <= 10){

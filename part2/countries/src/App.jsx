@@ -8,11 +8,17 @@ const App = () => {
   const [search, setSearch] = useState("")
   const [countries, setCountries] = useState([])
   const [searchResult, setSearchResult] = useState([])
+  const [weather, setWeather] = useState(null)
 
 
 const changeHandler = (event=>{
-  setSearch(event.target.value)
-  setSearchResult(countries.filter(country =>country.name.common.toLowerCase().includes(search.toLowerCase())))
+  const inputValue = event.target.value
+  setSearch((prev) => {
+    const searchValue = inputValue
+    setSearchResult(countries.filter(country =>country.name.common.toLowerCase().includes(searchValue.toLowerCase())))
+  
+  })
+  
   
 })
 
@@ -35,7 +41,9 @@ return (
   <input type="text" onChange={changeHandler} />
   <Display
    result= {searchResult}
-   handler = {clickHandler} />
+   handler = {clickHandler}
+   weather= {weather}
+   setWeather={setWeather} />
 
   </>
 )
