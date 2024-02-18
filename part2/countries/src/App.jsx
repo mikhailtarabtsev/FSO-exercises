@@ -3,6 +3,7 @@ import countryService from './services/countries'
 import Display from './components/display'
 
 
+
 const App = () => {
   const [search, setSearch] = useState("")
   const [countries, setCountries] = useState([])
@@ -17,14 +18,24 @@ const changeHandler = (event=>{
 
 useEffect(()=>{
   countryService.getAll()
-  .then(res=>setCountries(res))
-}
-  ,[])
+    .then(res=>setCountries(res))
+  },[])
+
+const clickHandler = (id) => {
+   countryService.getOne(id)
+   .then(res =>{  
+    setSearchResult([res])
+    })
+    
+   
+} 
 
 return (
   <>
   <input type="text" onChange={changeHandler} />
-  <Display result= {searchResult} />
+  <Display
+   result= {searchResult}
+   handler = {clickHandler} />
 
   </>
 )
