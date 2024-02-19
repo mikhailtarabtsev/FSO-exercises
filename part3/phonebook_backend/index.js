@@ -26,6 +26,8 @@ let data = [
     }
 ]
 
+app.use(express.json())
+
 app.get("/api/persons", (req, res)=>{
     res.json(data)
 })
@@ -51,6 +53,19 @@ app.get("/info", (req, res) =>{
     <br>
     <p>${date}</p>`)
 } )
+
+app.post("/api/persons", (req, res) => {
+    const idGenerator = () => Math.floor(Math.random() * 10000000)
+
+    const newContact = {
+        id : idGenerator(),
+        name : req.body.name,
+        number: Number(req.body.number)
+    }
+
+    data = data.concat(newContact)
+    res.json(newContact)
+})
 
 app.delete("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id)
