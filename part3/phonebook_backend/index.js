@@ -56,15 +56,45 @@ app.get("/info", (req, res) =>{
 
 app.post("/api/persons", (req, res) => {
     const idGenerator = () => Math.floor(Math.random() * 10000000)
+    const number = Number(req.body.number)
+    const name = req.body.name
 
-    const newContact = {
-        id : idGenerator(),
-        name : req.body.name,
-        number: Number(req.body.number)
+    if (name && number){
+        const nameExists = data.find(person => (name === person.name))
+        const numberExists = data.find(person => (number === Number(person.number)))
+
+        if (name === nameExists){
+            return res.status(400).json({error: "This name is already registered"})
+        }
+        else if (number === numberExists){
+            return  res.status(400).json({error:"This number is already registered"})
+        }
+        else{
+            const newContact = {
+                id : idGenerator(),
+                name : name,
+                number: number
+            }
+        
+            data = data.concat(newContact)
+            return res.json(newContact)
+        }
+        
+        
+    }
+    else if (!number && !name) {
+        return  res.status(400).json({error: "Please fill in the necessary fields"})
     }
 
-    data = data.concat(newContact)
-    res.json(newContact)
+    else if (!name) {
+       return res.status(400).json({error: "Name is missing"})
+
+    }
+    else if (!number) {
+        return res.status(400).json({error: "Number is missing"})
+    }
+  
+    
 })
 
 app.delete("/api/persons/:id", (req, res) => {
