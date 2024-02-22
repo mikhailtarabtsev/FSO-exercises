@@ -11,7 +11,7 @@ const Country = ({result, weather, setWeather}) =>{
             .catch(err=> console.log("something broken", err))}
         ,[]) 
     
-    const weatherIcon = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png` 
+        if(weather) {const weatherIcon = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png` 
         return (
             <>
                 <h2>{result.name.common}</h2>
@@ -22,7 +22,7 @@ const Country = ({result, weather, setWeather}) =>{
                     {Object.entries(result.languages).map(([key, value]) => (<li key = {key}>{value}</li>))}
                     </ul>
                 <img style={{width: 500}} src={result.flags.svg} alt={result.flags.alt} />
-
+                
                 <h3>Weather in {result.capital[0]}</h3>
                     <p>Temperature : {Math.floor(weather.main.temp-273)}°</p>
                     <img src={weatherIcon} alt={weather.weather[0].description} />
@@ -31,6 +31,9 @@ const Country = ({result, weather, setWeather}) =>{
                 
             </>
         )
+    
+        }
+       
 
    
 }
