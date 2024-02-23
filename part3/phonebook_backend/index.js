@@ -2,7 +2,7 @@ const express = require("express")
 const app = express()
 const PORT = 3001
 const morgan = require("morgan")
-const logger = morgan("short")
+
 
 
 let data = [
@@ -27,9 +27,12 @@ let data = [
       "number": "39-23-6423122"
     }
 ]
-
+morgan.token("body", (req,res)=> {
+        return req.body ? JSON.stringify(req.body) : null
+    
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body')) 
 app.use(express.json())
-app.use(morgan("tiny"))
 
 app.get("/api/persons", (req, res)=>{
     res.json(data)
@@ -59,19 +62,16 @@ app.get("/info", (req, res) =>{
 
 app.post("/api/persons", (req, res) => {
     const idGenerator = () => Math.floor(Math.random() * 10000000)
-    const number = Number(req.body.number)
+    const number = req.body.number
     const name = req.body.name
 
     if (name && number){
         const nameExists = data.find(person => (name === person.name))
-        const numberExists = data.find(person => (number === Number(person.number)))
 
-        if (name === nameExists){
+        if (nameExists){
             return res.status(400).json({error: "This name is already registered"})
         }
-        else if (number === numberExists){
-            return  res.status(400).json({error:"This number is already registered"})
-        }
+        
         else{
             const newContact = {
                 id : idGenerator(),
@@ -97,8 +97,9 @@ app.post("/api/persons", (req, res) => {
         return res.status(400).json({error: "Number is missing"})
     }
   
-    
+   
 })
+
 
 app.delete("/api/persons/:id", (req, res) => {
     const id = Number(req.params.id)
