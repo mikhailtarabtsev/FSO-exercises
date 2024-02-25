@@ -1,8 +1,10 @@
 const express = require("express")
+require("dotenv").config()
 const app = express()
 const PORT = process.env.PORT || 3001
 const morgan = require("morgan")
 const cors = require("cors")
+const Contact = require("./contact")
 
 app.use(express.static('dist'))
 
@@ -38,7 +40,7 @@ app.use(cors())
 
 
 app.get("/api/persons", (req, res)=>{
-    res.json(data)
+    Contact.find({}).then(result => res.json(result))
 })
 
 app.get("/api/persons/:id", (req,res)=> {
