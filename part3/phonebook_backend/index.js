@@ -66,7 +66,6 @@ app.get("/info", (req, res) =>{
 } )
 
 app.post("/api/persons", (req, res) => {
-    const idGenerator = () => Math.floor(Math.random() * 10000000)
     const number = req.body.number
     const name = req.body.name
 
@@ -78,14 +77,14 @@ app.post("/api/persons", (req, res) => {
         }
         
         else{
-            const newContact = {
-                id : idGenerator(),
+            const newContact = new Contact({
                 name : name,
                 number: number
-            }
+            })
         
-            data = data.concat(newContact)
-            return res.json(newContact)
+            newContact.save().then(result => {
+                res.json(result)
+            }) 
         }
         
         
