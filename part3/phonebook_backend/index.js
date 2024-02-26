@@ -46,21 +46,16 @@ app.get("/api/persons", (req, res)=>{
 app.get("/api/persons/:id", (req,res)=> {
     const id = Number(req.params.id)
     
-    const person = data.find(contact => id === contact.id)
+    Contact.findById(id)
+        .then(result => res.json(result))
+        .catch(err => next(err))
 
-    if (person){
-        res.json(person)
-    }
-    else {
-        res.status(404).end()
-    }
-    
 })
 
 app.get("/info", (req, res) =>{
     const date = new Date()
     res.send(`
-    <p>Phonebook has entries for ${data.length} people</p>
+    <p>Phonebook has entries for ${Contact.length} people</p>
     <br>
     <p>${date}</p>`)
 } )
@@ -70,23 +65,17 @@ app.post("/api/persons", (req, res) => {
     const name = req.body.name
 
     if (name && number){
-        const nameExists = data.find(person => (name === person.name))
-
-        if (nameExists){
-            return res.status(400).json({error: "This name is already registered"})
-        }
-        
-        else{
+      
             const newContact = new Contact({
                 name : name,
                 number: number
             })
         
-            newContact.save().then(result => {
+            newContact.save()
+            .then(result => {
                 res.json(result)
-            }) 
-        }
-        
+            })
+            .catch(err => next(err))     
         
     }
     else if (!number && !name) {
@@ -109,10 +98,19 @@ app.delete("/api/persons/:id", (req, res) => {
     Contact.findByIdAndDelete(req.params.id)
         .then(result =>{
                 res.status(204).end()})
-        .catch(err => console.log(err))
+        .catch(err => next(err))
 
     
 
 })
 
 app.listen(PORT,()=> console.log(`server is listening on port ${PORT}`))
+
+const errorHandler = (err, req, res, next) =>{
+    console.log(err.message)
+    if (err.name === "CastError"){
+        return res.status(400).send({error: "Malformatted ID"})
+    } 
+    next(err)}
+
+app.use(errorHandler)
