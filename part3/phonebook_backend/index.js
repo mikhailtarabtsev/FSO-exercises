@@ -8,28 +8,7 @@ const Contact = require("./modules/contact")
 
 app.use(express.static('dist'))
 
-let data = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+
 morgan.token("body", (req,res)=> {
         return req.body ? JSON.stringify(req.body) : null
     
@@ -43,8 +22,8 @@ app.get("/api/persons", (req, res)=>{
     Contact.find({}).then(result => res.json(result))
 })
 
-app.get("/api/persons/:id", (req,res)=> {
-    const id = Number(req.params.id)
+app.get("/api/persons/:id", (req,res,next)=> {
+    const id = req.params.id
     
     Contact.findById(id)
         .then(result => res.json(result))
@@ -54,13 +33,14 @@ app.get("/api/persons/:id", (req,res)=> {
 
 app.get("/info", (req, res) =>{
     const date = new Date()
-    res.send(`
-    <p>Phonebook has entries for ${Contact.length} people</p>
+    Contact.find({}).then(result => res.send(`
+    <p>Phonebook has entries for ${result.length} people</p>
     <br>
-    <p>${date}</p>`)
+    <p>${date}</p>`))
+    
 } )
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
     const number = req.body.number
     const name = req.body.name
 
@@ -94,7 +74,7 @@ app.post("/api/persons", (req, res) => {
 })
 
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
     Contact.findByIdAndDelete(req.params.id)
         .then(result =>{
                 res.status(204).end()})
