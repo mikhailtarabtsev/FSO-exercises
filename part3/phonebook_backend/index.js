@@ -43,7 +43,6 @@ app.get("/info", (req, res) =>{
 app.post("/api/persons", (req, res, next) => {
     const number = req.body.number
     const name = req.body.name
-
     if (name && number){
       
             const newContact = new Contact({
@@ -73,6 +72,19 @@ app.post("/api/persons", (req, res, next) => {
    
 })
 
+app.put("/api/persons/:id", (req,res,next) =>{
+    const number = req.body.number
+    const name = req.body.name
+    const contact = {
+        name : name,
+        number : number
+    }
+    Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+        .then(updatedContact => {
+            res.json(updatedContact)
+        })
+        .catch(err => next(err))
+}) 
 
 app.delete("/api/persons/:id", (req, res, next) => {
     Contact.findByIdAndDelete(req.params.id)
