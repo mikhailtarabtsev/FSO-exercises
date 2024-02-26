@@ -4,7 +4,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 const morgan = require("morgan")
 const cors = require("cors")
-const Contact = require("./contact")
+const Contact = require("./modules/contact")
 
 app.use(express.static('dist'))
 
@@ -106,15 +106,11 @@ app.post("/api/persons", (req, res) => {
 
 
 app.delete("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const person = data.find(contact => id === contact.id)
-    if (person){
-        data = data.filter(contact => id !== contact.id)
-        res.status(204).end()
-    }
-    else{
-        res.status(404).end()
-    }
+    Contact.findByIdAndDelete(req.params.id)
+        .then(result =>{
+                res.status(204).end()})
+        .catch(err => console.log(err))
+
     
 
 })
