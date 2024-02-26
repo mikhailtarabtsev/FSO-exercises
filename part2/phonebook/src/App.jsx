@@ -89,6 +89,14 @@ const App = () => {
           setNewNumber("");
           setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
         })
+        .catch(res =>{
+          setMessage({
+            text: res.response.data.error,
+            error:true,
+            isRendered: true
+          })
+          setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
+        })
     
     }
     
