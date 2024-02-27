@@ -41,45 +41,32 @@ app.get("/info", (req, res) =>{
 } )
 
 app.post("/api/persons", (req, res, next) => {
-    const number = req.body.number
-    const name = req.body.name
-    if (name && number){
+    const {name, number} = req.body
       
-            const newContact = new Contact({
-                name : name,
-                number: number
-            })
-        
-            newContact.save()
-            .then(result => {
-                res.json(result)
-            })
-            .catch(err => next(err))     
-        
-    }
-    else if (!number && !name) {
-        return  res.status(400).json({error: "Please fill in the necessary fields"})
-    }
+    const newContact = new Contact({
+        name : name,
+        number: number
+    })
 
-    else if (!name) {
-       return res.status(400).json({error: "Name is missing"})
-
-    }
-    else if (!number) {
-        return res.status(400).json({error: "Number is missing"})
-    }
+    newContact.save()
+    .then(result => {
+        res.json(result)
+    })
+    .catch(err => next(err))     
   
    
 })
 
 app.put("/api/persons/:id", (req,res,next) =>{
-    const number = req.body.number
-    const name = req.body.name
+    const {name, number} = req.body
     const contact = {
         name : name,
         number : number
     }
-    Contact.findByIdAndUpdate(req.params.id, contact, {new: true})
+    Contact.findByIdAndUpdate(req.params.id, contact, {
+        new: true,
+        runValidators: true,
+        context: "query"})
         .then(updatedContact => {
             res.json(updatedContact)
         })
@@ -102,7 +89,9 @@ const errorHandler = (err, req, res, next) =>{
     console.log(err.message)
     if (err.name === "CastError"){
         return res.status(400).send({error: "Malformatted ID"})
-    } 
+    } else if (err.name === "ValidationError"){
+        return res.status(400).json({error: err.message})
+    }
     next(err)}
 
 app.use(errorHandler)

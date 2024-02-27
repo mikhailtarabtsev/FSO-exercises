@@ -65,9 +65,9 @@ const App = () => {
           })
             setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
             })
-          .catch(res => {
+          .catch(err => {
             setMessage({
-            text:`"${duplicate.name}" contact has already been deleted from server!`,
+            text: err.response.data.error,
             error: true,
             isRendered:true})
             setTimeout(()=>setMessage({...message, isRendered : false}), 5000) })
