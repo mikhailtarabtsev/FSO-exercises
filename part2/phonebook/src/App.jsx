@@ -58,6 +58,8 @@ const App = () => {
           .update(duplicate.id, personObject)
           .then(res => {
             setPersons((prevPersons) => prevPersons.map( person => person.id !== duplicate.id ? person : res ))
+            setNewName("")
+            setNewNumber("")
             setMessage({
               text:`"${duplicate.name}" contact has been updated successfully!`,
               error: false,
@@ -86,7 +88,7 @@ const App = () => {
         })
           setPersons(persons.concat(res))
           setNewName("")
-          setNewNumber("");
+          setNewNumber("")
           setTimeout(()=>setMessage({...message, isRendered : false}), 5000)
         })
         .catch(err =>{

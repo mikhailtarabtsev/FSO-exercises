@@ -15,10 +15,17 @@ const contactSchema = new mongoose.Schema({
     name:{
         type: String,
         minLength: 3,
-        required: true},
+        required: [true, "User name is required"]
+    },
     number:{
         type: String,
-        required: true
+        required: [true, "Phone number required"],
+        validate: {
+            validator: (v) =>{
+                return /^\d{2,3}-\d+$/.test(v)
+                },
+            message: "Incorrect phone number format"
+        }
     }
 })
 
