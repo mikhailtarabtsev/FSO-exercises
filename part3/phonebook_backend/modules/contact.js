@@ -21,7 +21,7 @@ const contactSchema = new mongoose.Schema({
         type: String,
         required: [true, "Phone number required"],
         validate: {
-            validator: (v) =>{
+            validator: (v) => {
                 return /^\d{2,3}-\d+$/.test(v)
                 },
             message: "Incorrect phone number format"
@@ -30,7 +30,7 @@ const contactSchema = new mongoose.Schema({
 })
 
 contactSchema.set("toJSON", {
-    transform: (document, returnedObject) =>{
+    transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v

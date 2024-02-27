@@ -27,7 +27,7 @@ if (process.argv.length > 3){
     })
 }
 else if (process.argv.length === 3){
-    Contact.find({}).then(result=>{
+    Contact.find({}).then(result => {
         result.forEach(contact => {
             console.log(contact)
         })
