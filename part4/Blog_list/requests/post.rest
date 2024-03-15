@@ -2,8 +2,8 @@ POST http://localhost:3000/api/blogs
 Content-Type: application/json
 
 { 
-    "title": "billy",
-    "author": "040-123456",
-    "url":"/asdjasd",
-    "likes": 12
+    "title": "i turned myself into a pickle",
+    "author": "Pickle rick",
+    "url":"pickle",
+    "likes": 24
 }
