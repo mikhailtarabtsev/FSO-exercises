@@ -19,7 +19,7 @@ const mostBlogs = (blogs) =>{
             authors[existingAuthorIndex].blogs ++;
         }
         else{
-            const newAuthor = {
+            let newAuthor = {
                 name: blog.author,
                 blogs: 1
                 }
@@ -30,9 +30,33 @@ const mostBlogs = (blogs) =>{
         return value.blogs > most.blogs? value : most
     }, authors[0])
 }
+
+const mostLikes = (blogs) =>{
+    let authors = []
+    
+    blogs.map(blog =>{
+        let existingAuthorIndex = authors.findIndex(val => val.author === blog.author)
+        if(existingAuthorIndex !== -1){
+            authors[existingAuthorIndex].likes += blog.likes
+            
+        }
+        else{
+            let newAuthor = {
+                author: blog.author,
+                likes: blog.likes
+                }
+            authors.push( newAuthor )
+        }
+    })
+   return authors.reduce((most, value) =>{
+        return value.likes > most.likes? value : most
+    }, authors[0])
+
+}
 module.exports = {
     dummy,
     totalLikes,
     favBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

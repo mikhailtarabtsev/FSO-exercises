@@ -79,13 +79,23 @@ test('favourite blog', ()=>{
     const result = listHelper.favBlog(blogs)
     assert.deepEqual(result, blogs[2])
 })
+describe('most', ()=>{
+    test('blogs', ()=>{
+      const testValue = {
+        name: "Robert C. Martin",
+        blogs: 3
+      }
+      const result = listHelper.mostBlogs(blogs)
+      assert.deepEqual(result, testValue)
+    })
 
-test('Most blogs', ()=>{
-    const testValue = {
-      name: "Robert C. Martin",
-      blogs: 3
-    }
-    const result = listHelper.mostBlogs(blogs)
-    console.log(result)
-    assert.deepEqual(result, testValue)
+    test('likes', ()=>{
+      const testValue = {
+        author: "Edsger W. Dijkstra",
+        likes: 17
+      }
+
+      const result = listHelper.mostLikes(blogs)
+      assert.deepEqual(result, testValue)
+    })
 })
