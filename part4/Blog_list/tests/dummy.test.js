@@ -55,19 +55,22 @@ const blogs = [
 test('dummy test returns 1', ()=> {
 
     const result = listHelper.dummy(blogs)
-    assert.strictEqual = (result, 1)
+    assert.strictEqual(result, 1)
 })
 
 describe('total likes', ()=>{
         test('with one blog', () => {
             const oneBlog = [blogs[0]]
-            assert.strictEqual = (listHelper.totalLikes(oneBlog, 7))
+            const result = listHelper.totalLikes(oneBlog)
+            assert.strictEqual(result, 7)
         })
         test('empty is zero', ()=>{
-            const empty = []
-            assert.strictEqual = (listHelper.totalLikes(empty, 0))
+            const empty = [];
+            const result = listHelper.totalLikes(empty)
+            assert.strictEqual(result, 0)
         })
         test('full list is total', ()=>{
-            assert.strictEqual = (listHelper.totalLikes(blogs), 36)
+            const result = listHelper.totalLikes(blogs)
+            assert.strictEqual(result, 36)
         })
     })
