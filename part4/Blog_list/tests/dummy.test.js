@@ -1,6 +1,11 @@
-const {test, describe} = require('node:test')
+const {test, describe, after, beforeEach} = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
+const mongoose = require('mongoose')
+const Blog = require('../models/blog')
+const supertest = require('supertest')
+const app = require('../app')
+const api = supertest(app)
 
 const blogs = [
     {
@@ -52,6 +57,16 @@ const blogs = [
       __v: 0
     }  
   ]
+
+beforeEach( async () =>{
+ try{ await Blog.deleteMany({});
+  for (let i = 0; i < blogs.length; i++){
+    let initialBlogs = new Blog(blogs[i])
+    await initialBlogs.save()
+  }}
+  catch(err){next(err)}
+})
+
 test('dummy test returns 1', ()=> {
 
     const result = listHelper.dummy(blogs)
@@ -98,4 +113,19 @@ describe('most', ()=>{
       const result = listHelper.mostLikes(blogs)
       assert.deepEqual(result, testValue)
     })
+})
+
+test.only('Get request returns JSON data with correct length', async()=>{
+  try {
+    const res = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    assert.strictEqual(res.body.length, 6)}
+  catch (err){next (err)}
+} )
+
+after( async()=>{
+  await mongoose.connection.close()
 })
