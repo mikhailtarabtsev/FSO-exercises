@@ -22,7 +22,6 @@ test('dummy test returns 1', ()=> {
     const result = listHelper.dummy(listHelper.blogs)
     assert.strictEqual(result, 1)
 })
-
 describe('total likes', ()=>{
         test('with one blog', () => {
             const oneBlog = [listHelper.blogs[0]]
@@ -76,10 +75,19 @@ test('Get request returns JSON data with correct length', async()=>{
   catch (err){next (err)}
 } )
 
-test('Id matches with the database', async ()=>{
-  const blogs = await Blog.find({})
-  blogs.map(blog => blog.toJSON())
-  assert.strictEqual(blogs[0].id, listHelper.blogs[0]._id)
+test.only('Id matches with the database', async ()=>{
+  const newBlog = new Blog({
+    title: 'Funniest thing',
+    author: 'Pickle Rick',
+    url: 'localhost:3001',
+    likes: 5})
+
+  await newBlog.save()
+  const savedBlogs = await listHelper.blogsDb()
+  
+  assert(!savedBlogs[6].hasOwnProperty('_id'))
+
+  
 })
 
 test('Post request works correctly', async ()=>{
@@ -91,18 +99,18 @@ test('Post request works correctly', async ()=>{
   likes: 5})
 
   await api
-  .post('/api/blogs')
-  .send(newBlog.toJSON())
-  .expect(201)
-  .expect('Content-Type', /application\/json/)
+    .post('/api/blogs')
+    .send(newBlog.toJSON())
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
 
-const updatedDb = await Blog.find({})
+  const updatedDb = await Blog.find({})
 
-assert.strictEqual(updatedDb.length, db.length + 1)
+  assert.strictEqual(updatedDb.length, db.length + 1)
 })
 
 
-test.only('Missing likes become 0', async ()=>{
+test('Missing likes become 0', async ()=>{
   const db = await Blog.find({})
   const newBlog = new Blog({
   title: 'Funniest thing',
