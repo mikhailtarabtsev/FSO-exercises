@@ -82,24 +82,44 @@ test('Id matches with the database', async ()=>{
   assert.strictEqual(blogs[0].id, listHelper.blogs[0]._id)
 })
 
-test.only('Post request works correctly', async ()=>{
+test('Post request works correctly', async ()=>{
   const db = await Blog.find({})
   const newBlog = new Blog({
   title: 'Funniest thing',
   author: 'Pickle Rick',
   url: 'localhost:3001',
-  likes: 5,
-  __v: 0})
+  likes: 5})
 
   await api
   .post('/api/blogs')
-  .send(newBlog)
+  .send(newBlog.toJSON())
   .expect(201)
   .expect('Content-Type', /application\/json/)
 
-  const updatedDb = await Blog.find({})
+const updatedDb = await Blog.find({})
 
 assert.strictEqual(updatedDb.length, db.length + 1)
+})
+
+
+test.only('Missing likes become 0', async ()=>{
+  const db = await Blog.find({})
+  const newBlog = new Blog({
+  title: 'Funniest thing',
+  author: 'Pickle Rick',
+  url: 'localhost:3001'
+ })
+
+  await api
+  .post('/api/blogs')
+  .send(newBlog.toJSON())
+  .expect(201)
+  .expect('Content-Type', /application\/json/)
+
+const updatedDb = await Blog.find({})
+console.log(updatedDb)
+assert.strictEqual(updatedDb[6].likes, 0)
+
 })
 
 after( async()=>{
