@@ -76,10 +76,30 @@ test('Get request returns JSON data with correct length', async()=>{
   catch (err){next (err)}
 } )
 
-test.only('Id matches with the database', async ()=>{
+test('Id matches with the database', async ()=>{
   const blogs = await Blog.find({})
   blogs.map(blog => blog.toJSON())
   assert.strictEqual(blogs[0].id, listHelper.blogs[0]._id)
+})
+
+test.only('Post request works correctly', async ()=>{
+  const db = await Blog.find({})
+  const newBlog = new Blog({
+  title: 'Funniest thing',
+  author: 'Pickle Rick',
+  url: 'localhost:3001',
+  likes: 5,
+  __v: 0})
+
+  await api
+  .post('/api/blogs')
+  .send(newBlog)
+  .expect(201)
+  .expect('Content-Type', /application\/json/)
+
+  const updatedDb = await Blog.find({})
+
+assert.strictEqual(updatedDb.length, db.length + 1)
 })
 
 after( async()=>{
