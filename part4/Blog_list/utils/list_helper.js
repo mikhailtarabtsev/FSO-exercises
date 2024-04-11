@@ -50,16 +50,11 @@ const blogs = [
       __v: 0
     }  
   ]
-const noId = async () =>{
-    const blog = new Blog ({title: 'Funnies thing',
-                            author: 'Pickle Rick',
-                            url: 'localhost:3001',
-                            likes: 5,
-                            __v: 0})
-    await blog.save()
-    await blog.deleteOne()
-    return blog._id.toString
-}
+
+const blogsDb = async () =>{
+    const blogs = await Blog.find({})
+    return blogs.map( blog => blog.toJSON())
+  };
 
 const dummy = (blogs) => {
     return 1
@@ -120,7 +115,7 @@ const mostLikes = (blogs) =>{
 
 module.exports = {
     blogs,
-    noId,
+    blogsDb,
     dummy,
     totalLikes,
     favBlog,

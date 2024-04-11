@@ -75,7 +75,7 @@ test('Get request returns JSON data with correct length', async()=>{
   catch (err){next (err)}
 } )
 
-test.only('Id matches with the database', async ()=>{
+test('Id matches with the database', async ()=>{
   const newBlog = new Blog({
     title: 'Funniest thing',
     author: 'Pickle Rick',
@@ -109,25 +109,47 @@ test('Post request works correctly', async ()=>{
   assert.strictEqual(updatedDb.length, db.length + 1)
 })
 
+describe.only('Missing', ()=>{
+  test('likes become 0', async ()=>{
+    const db = await Blog.find({})
+    const newBlog = new Blog({
+    title: 'Funniest thing',
+    author: 'Pickle Rick',
+    url: 'localhost:3001'
+   })
+  
+    await api
+    .post('/api/blogs')
+    .send(newBlog.toJSON())
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+  const updatedDb = await Blog.find({})
+  console.log(updatedDb)
+  assert.strictEqual(updatedDb[6].likes, 0)
+  })
 
-test('Missing likes become 0', async ()=>{
-  const db = await Blog.find({})
-  const newBlog = new Blog({
-  title: 'Funniest thing',
-  author: 'Pickle Rick',
-  url: 'localhost:3001'
- })
-
-  await api
-  .post('/api/blogs')
-  .send(newBlog.toJSON())
-  .expect(201)
-  .expect('Content-Type', /application\/json/)
-
-const updatedDb = await Blog.find({})
-console.log(updatedDb)
-assert.strictEqual(updatedDb[6].likes, 0)
-
+  test.only('title gives 400', async () =>{
+    const newBlog = new Blog({
+      author: 'Pickle Rick',
+      url: 'localhost:3001',
+      likes: 5})
+  
+    await api.post('/api/blogs')
+        .send(newBlog.toJSON())
+        .expect(400)
+  })
+  
+  test.only('URL gives 400', async () =>{
+    const newBlog = new Blog({
+      title: 'Funniest thing',
+      author: 'Pickle Rick',
+      likes: 5})
+    await api
+      .post('/api/blogs')
+      .send(newBlog.toJSON())
+      .expect(400)
+  })
 })
 
 after( async()=>{

@@ -13,8 +13,17 @@ blogsRouter.get('/', async (request, response) => {
   
 blogsRouter.post('/', async (request, response) => {
    try {const blog = new Blog(request.body)
-    const result = await blog.save()
-    response.status(201).json(result)}
+        if(!request.body.title){
+          response.status(400).end()
+        }
+        else if (!request.body.url){
+          response.status(400).end()
+        }
+        else{
+          const result = await blog.save()
+          response.status(201).json(result)}
+        }
+        
     catch(err){next(err)}
   })
 
