@@ -109,7 +109,7 @@ test('Post request works correctly', async ()=>{
   assert.strictEqual(updatedDb.length, db.length + 1)
 })
 
-describe.only('Missing', ()=>{
+describe('Missing', ()=>{
   test('likes become 0', async ()=>{
     const db = await Blog.find({})
     const newBlog = new Blog({
@@ -129,7 +129,7 @@ describe.only('Missing', ()=>{
   assert.strictEqual(updatedDb[6].likes, 0)
   })
 
-  test.only('title gives 400', async () =>{
+  test('title gives 400', async () =>{
     const newBlog = new Blog({
       author: 'Pickle Rick',
       url: 'localhost:3001',
@@ -140,7 +140,7 @@ describe.only('Missing', ()=>{
         .expect(400)
   })
   
-  test.only('URL gives 400', async () =>{
+  test('URL gives 400', async () =>{
     const newBlog = new Blog({
       title: 'Funniest thing',
       author: 'Pickle Rick',
@@ -152,6 +152,43 @@ describe.only('Missing', ()=>{
   })
 })
 
+test.only('deleting a note works', async () =>{
+  const blogsInDb = await Blog.find({})
+  const blogs = blogsInDb.map(blog => blog.toJSON())
+  const blogToDelete = blogs [0]
+  const idToDelete = blogToDelete.id
+  
+  await api
+    .delete(`/api/blogs/${idToDelete}`)
+    .expect(204)
+
+  const blogsDb = await Blog.find({})
+  const titles = blogsDb.map(blog => blog.title )
+  assert(!titles.includes(blogToDelete.title))
+
+  assert.strictEqual(blogsDb.length, listHelper.blogs.length-1)
+  
+})
+
+test('Updating the blog works', async () =>{
+  const blogToUpdate = listHelper.blogs[0]
+  const idToUpdate = blogToUpdate._id
+  const updatedBlog = {
+    title: 'Funniest thing',
+    author: 'Pickle Rick'
+  }
+
+    await api
+      .put(`/api/blogs/${idToUpdate}`)
+      .send(updatedBlog)
+      .expect(200)
+
+  const blogsDb = await Blog.find({})
+  const putAuthor = blogsDb.map(blog => blog.author)
+  const putTitle = blogsDb.map(blog => blog.title)
+    assert(putAuthor[0].includes(updatedBlog.author))
+    assert(putTitle[0].includes(updatedBlog.title))
+})
 after( async()=>{
   await mongoose.connection.close()
 })
