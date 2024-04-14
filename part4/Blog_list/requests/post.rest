@@ -6,3 +6,21 @@ Content-Type: application/json
     "author": "Uncle Mike",
     "url":"sfdgsf"
 }
+###
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "username" : "UncleMike",
+    "password" : "Booger-Aids",
+    "name" : "Mikhail tarabtsev"
+}
+###
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+    "username" : "Pickle Rick",
+    "password" : "Booger-Aids11",
+    "name" : "Rick Sanchez"
+}
