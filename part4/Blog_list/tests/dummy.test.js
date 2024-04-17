@@ -2,6 +2,7 @@ const {test, describe, after, beforeEach} = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 const mongoose = require('mongoose')
+const User = require('../models/user')
 const Blog = require('../models/blog')
 const supertest = require('supertest')
 const app = require('../app')
@@ -9,7 +10,9 @@ const api = supertest(app)
 
 
 beforeEach( async () =>{
- try{ await Blog.deleteMany({});
+ try{
+  await Blog.deleteMany({});
+  await User.deleteMany({});
   for (let i = 0; i < listHelper.blogs.length; i++){
     let initialBlogs = new Blog(listHelper.blogs[i])
     await initialBlogs.save()
@@ -152,7 +155,7 @@ describe('Missing', ()=>{
   })
 })
 
-test.only('deleting a note works', async () =>{
+test('deleting a note works', async () =>{
   const blogsInDb = await Blog.find({})
   const blogs = blogsInDb.map(blog => blog.toJSON())
   const blogToDelete = blogs [0]
@@ -188,6 +191,90 @@ test('Updating the blog works', async () =>{
   const putTitle = blogsDb.map(blog => blog.title)
     assert(putAuthor[0].includes(updatedBlog.author))
     assert(putTitle[0].includes(updatedBlog.title))
+})
+
+describe.only ('User', () =>{
+  test('data submission works', async () =>{
+    const dbAtStart = await listHelper.usersInDb() 
+    const newUser =  {
+      username : "Pickle Rick",
+      password : "Booger-Aids11",
+      name : "Rick Sanchez"
+    }
+    
+
+    await api
+      .post('/api/users/')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const dbAtEnd = await listHelper.usersInDb()
+    assert.strictEqual(dbAtEnd.length, dbAtStart.length + 1 )
+    
+  })
+  test('password of insufficient length is rejected', async () =>{
+    
+    const newUser =  {
+      username : "Pickle Rick",
+      password : "Boo",
+      name : "Rick Sanchez"
+    }
+
+    const response = await api
+      .post('/api/users/')
+      .send(newUser)
+      .expect(400)
+    
+    const dbAtEnd = await listHelper.usersInDb()
+    assert(response.body.error.includes('Minimum required password length is 3 characters'))
+    assert.strictEqual(dbAtEnd.length, 0)
+  })
+
+  test('name of insufficient length is rejected', async () =>{
+    const newUser =  {
+      username : "Pi",
+      password : "Booger-aids11",
+      name : "Rick Sanchez"
+    }
+
+    const response = await api
+      .post('/api/users/')
+      .send(newUser)
+      .expect(400)
+    
+    const dbAtEnd = await listHelper.usersInDb()
+    assert(response.body.error.includes('Username needs to be at least 3 characters long'))
+    assert.strictEqual(dbAtEnd.length, 0)
+  })
+ 
+test.only('names that are non-unique are rejected', async ()=>{
+  const newUser =  {
+    username : "Pickle Rick",
+    passwordHash : "Booger-Aids11",
+    name : "Rick Sanchez"
+  }
+  const initialUser = new User (newUser)
+  await initialUser.save()
+
+  const anotherUser = {
+    username: "Pickle Rick",
+    password: "RickAndMorty",
+    name:"Morty Smith"
+
+  }
+  await api
+    .post('/api/users/')
+    .send(anotherUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  const dbAtEnd = await listHelper.usersInDb()
+  assert.strictEqual(dbAtEnd.length, 1 )
+  
+
+})
+  //test('data is retrieved successfully' )
 })
 after( async()=>{
   await mongoose.connection.close()
