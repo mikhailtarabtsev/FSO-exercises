@@ -6,12 +6,11 @@ const jwt = require('jsonwebtoken')
 
 
 blogsRouter.get('/', async (req, res) => {
-
   try {
     const blogs = await Blog.find({}).populate('user')
     res.json(blogs)
-  
   }
+
   catch{res.status(500)}
 })
   
@@ -48,13 +47,23 @@ blogsRouter.post('/', async (req, res, next) => {
   })
 
 blogsRouter.delete('/:id', async (req, res, next) =>{
-  try{
-    await Blog.findByIdAndDelete(req.params.id)
-    res.status(204).end()
+  const id = req.params.id
+  const blog = await Blog.findById(id)
+  const userId = blog.user.toString()
+  const deletingUser = jwt.verify(req.token, process.env.SECRET)
+  if(deletingUser.id === userId){
+    try{
+      await Blog.findByIdAndDelete(id)
+      res.status(204).end()
+    }
+    catch(err){
+      next(err)
+    } 
   }
-  catch(err){
-    next(err)
-  }  
+  else{
+    res.status(401).json({error:"unauthorized user"})
+  }
+  
 })
 
 blogsRouter.put('/:id', async (req,res, next) =>{
