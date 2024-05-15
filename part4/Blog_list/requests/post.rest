@@ -2,9 +2,11 @@ POST http://localhost:3000/api/blogs
 Content-Type: application/json
 
 { 
-    "title": "fgsfsfg",
+    "title": "take two",
     "author": "Uncle Mike",
-    "url":"sfdgsf"
+    "url":"fdfdfdfg",
+    "userId" : "661c2c7620c19a047f620611"
+
 }
 ###
 POST http://localhost:3000/api/users

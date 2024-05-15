@@ -1,5 +1,6 @@
 const usersRouter = require('express').Router()
 const User = require('../models/user')
+const Blog = require('../models/blog')
 const bcrypt = require('bcryptjs')
 
 usersRouter.post('/', async (req,res,next) =>{
@@ -26,7 +27,7 @@ usersRouter.post('/', async (req,res,next) =>{
 })
 
 usersRouter.get('/', async (req,res)=>{
-    const usersInDb = await User.find({})
+    const usersInDb = await User.find({}).populate('blogs')
     const usersToSend = usersInDb.map(u => u.toJSON())
     res.status(200).json(usersToSend)
 })
