@@ -9,7 +9,9 @@ const userExtractor = async (req, res, next)=>{
       req.user = user
       next()
     }
-    
+    else{
+      next()
+    }
 }
 
 module.exports = userExtractor

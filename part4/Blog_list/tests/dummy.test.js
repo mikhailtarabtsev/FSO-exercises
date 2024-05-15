@@ -7,12 +7,20 @@ const Blog = require('../models/blog')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
+const jwt = require('jsonwebtoken')
 
 
 beforeEach( async () =>{
  try{
   await Blog.deleteMany({});
   await User.deleteMany({});
+  const newUser =  {
+    username : "Pickle Rick",
+    passwordHash : "Booger-Aids11",
+    name : "Rick Sanchez"
+  }
+  const initialUser = new User (newUser)
+  await initialUser.save()
   for (let i = 0; i < listHelper.blogs.length; i++){
     let initialBlogs = new Blog(listHelper.blogs[i])
     await initialBlogs.save()
@@ -93,8 +101,18 @@ test('Id matches with the database', async ()=>{
   
 })
 
-test('Post request works correctly', async ()=>{
+test.only('Post request works correctly', async ()=>{
   const db = await Blog.find({})
+
+  const users = await User.find({})
+
+  const user = users[0]
+  const userForToken = {
+    username : user.username,
+    id: user._id
+  }
+  const token = jwt.sign(userForToken, process.env.SECRET)
+
   const newBlog = new Blog({
   title: 'Funniest thing',
   author: 'Pickle Rick',
@@ -104,6 +122,7 @@ test('Post request works correctly', async ()=>{
   await api
     .post('/api/blogs')
     .send(newBlog.toJSON())
+    .set('Authorization', `Bearer ${token}`)
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
@@ -112,6 +131,26 @@ test('Post request works correctly', async ()=>{
   assert.strictEqual(updatedDb.length, db.length + 1)
 })
 
+test.only('Post request without token gets correctly rejected', async ()=>{
+  const db = await Blog.find({})
+
+  const newBlog = new Blog({
+    title: 'Funniest thing',
+    author: 'Pickle Rick',
+    url: 'localhost:3001',
+    likes: 5})
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog.toJSON())
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+  
+    const updatedDb = await Blog.find({})
+  
+    assert.strictEqual(updatedDb.length, db.length)
+
+})
 describe('Missing', ()=>{
   test('likes become 0', async ()=>{
     const db = await Blog.find({})
@@ -193,7 +232,7 @@ test('Updating the blog works', async () =>{
     assert(putTitle[0].includes(updatedBlog.title))
 })
 
-describe.only ('User', () =>{
+describe ('User', () =>{
   test('data submission works', async () =>{
     const dbAtStart = await listHelper.usersInDb() 
     const newUser =  {
@@ -248,7 +287,7 @@ describe.only ('User', () =>{
     assert.strictEqual(dbAtEnd.length, 0)
   })
  
-test.only('names that are non-unique are rejected', async ()=>{
+test('names that are non-unique are rejected', async ()=>{
   const newUser =  {
     username : "Pickle Rick",
     passwordHash : "Booger-Aids11",
@@ -274,7 +313,6 @@ test.only('names that are non-unique are rejected', async ()=>{
   
 
 })
-  //test('data is retrieved successfully' )
 })
 after( async()=>{
   await mongoose.connection.close()
