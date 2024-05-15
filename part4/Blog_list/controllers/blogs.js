@@ -16,13 +16,11 @@ blogsRouter.get('/', async (req, res) => {
   
 blogsRouter.post('/', async (req, res, next) => {
    try {
-    const body = req.body
-    const decodedToken = jwt.verify(req.token, process.env.SECRET)
-    
-    if(!decodedToken.id){
-      return res.status(401).json({error: "invalid token"})
+    const body = req.body  
+    if(!req.user){
+      return res.status(401).json({error: "You need to be logged in"})
     }
-    const user = await User.findById(decodedToken.id)
+    const user = req.user
     const blog = new Blog({
       title: body.title,
       author: body.name,
@@ -50,8 +48,8 @@ blogsRouter.delete('/:id', async (req, res, next) =>{
   const id = req.params.id
   const blog = await Blog.findById(id)
   const userId = blog.user.toString()
-  const deletingUser = jwt.verify(req.token, process.env.SECRET)
-  if(deletingUser.id === userId){
+
+  if(req.user.id === userId){
     try{
       await Blog.findByIdAndDelete(id)
       res.status(204).end()
