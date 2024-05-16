@@ -9,23 +9,34 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  useEffect(()=>{
+    const loggedInUserJson = localStorage.getItem("loggedInUser")
+    if(loggedInUserJson){
+      const appUser = JSON.parse(loggedInUserJson)
+      setUser(appUser)
+    }
+  },[])
+
 
   const loginHandler = async (event) =>{
     event.preventDefault()
     try{
       const user = await loginService.login({username, password})
+      localStorage.setItem("loggedInUser", JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
-      console.log(user)
     }catch(err){
       setErrorMessage('Invalid credentials')
       setTimeout(()=>{
         setErrorMessage(null)
       }, 5000)
     }
-    
+  }
 
+  const logOutHandler = () =>{
+    localStorage.removeItem('loggedInUser')
+    setUser(null)
   }
 
   useEffect(() => {
@@ -63,7 +74,10 @@ const App = () => {
   const blogList = () =>(
     <div>
     <h2>Blogs</h2>
+    <div>
     <p><strong>{user.name}</strong> logged in</p>
+    <button onClick = {logOutHandler}>Log out</button>
+    </div>
     {blogs.map(blog =>
       <Blog key={blog.id} blog={blog} />
     )}
