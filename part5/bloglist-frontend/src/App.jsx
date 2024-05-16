@@ -31,7 +31,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     }catch(err){
-      setNotification('Invalid credentials')
+      setNotification({text :'Invalid credentials', error: true})
       setTimeout(()=>{
         setNotification(null)
       }, 5000)
@@ -53,12 +53,12 @@ const App = () => {
       setUrl("")
       const newBlogs =  await blogService.getAll()
       setBlogs(newBlogs)
-      setNotification("Blog has successfully been posted")
+      setNotification({text: "Blog has successfully been posted", error : false})
       setTimeout(() => {
         setNotification(null)
       }, 5000);
     }catch(err){
-      setNotification("Something is wrong")
+      setNotification({text:"Something went wrong", error : true})
       setTimeout(() => {
         setNotification(null)
       }, 5000);
@@ -147,9 +147,23 @@ const App = () => {
   </div>
   )
 
+  const notificationComponent = () => {
+   return (  <div style ={{
+                  padding : "20px",
+                  fontSize: "16px",
+                  fontFamily: "tahoma",
+                  border: notification.error? "3px solid red" : "3px solid green",
+                  backgroundColor : "gray"
+          }}>{ notification? notification.text : null}</div>
+)}
+  
+  
+  
   return (
     <>
-    <div>{notification}</div>
+    <div>
+    {notification ? notificationComponent() : null }
+    </div>
     <div>
       {
       user === null
