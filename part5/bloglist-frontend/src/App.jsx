@@ -8,7 +8,10 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
   useEffect(()=>{
     const loggedInUserJson = localStorage.getItem("loggedInUser")
     if(loggedInUserJson){
@@ -23,13 +26,14 @@ const App = () => {
     try{
       const user = await loginService.login({username, password})
       localStorage.setItem("loggedInUser", JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     }catch(err){
-      setErrorMessage('Invalid credentials')
+      setNotification('Invalid credentials')
       setTimeout(()=>{
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -38,6 +42,28 @@ const App = () => {
     localStorage.removeItem('loggedInUser')
     setUser(null)
   }
+
+  const blogHandler = async (event) =>{
+    event.preventDefault()
+    try{
+      blogService.setToken(user.token)
+      await blogService.create({title, author, url})
+      setTitle("")
+      setAuthor("")
+      setUrl("")
+      const newBlogs =  await blogService.getAll()
+      setBlogs(newBlogs)
+      setNotification("Blog has successfully been posted")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
+    }catch(err){
+      setNotification("Something is wrong")
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
+     }
+  } 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -71,27 +97,64 @@ const App = () => {
     </form>
   )
 
-  const blogList = () =>(
+  const loggedInUI = () =>(
     <div>
     <h2>Blogs</h2>
+      <div>
+        <p><strong>{user.name}</strong> logged in</p>
+        <button onClick = {logOutHandler}>Log out</button>
+      </div>
     <div>
-    <p><strong>{user.name}</strong> logged in</p>
-    <button onClick = {logOutHandler}>Log out</button>
+      <div>
+        <form onSubmit={blogHandler}>
+          <h3>Make an new blog</h3>
+          <div>
+            <b>Title:  </b>
+            <input 
+              type="text"
+              value={title}
+              onChange={({target})=>setTitle(target.value)}
+            />
+          </div>
+          
+          <div>
+          <b>Author:  </b>
+           <input
+            type="text"
+            value={author}
+            onChange={({target})=>setAuthor(target.value)}
+            />
+          </div>
+
+          <div>
+            <b>Url:  </b>
+           <input 
+            type="text"
+            value={url}
+            onChange={({target})=>setUrl(target.value)} />
+          </div>
+          <button style={{margin:"15px 20px"}} type='submit'>Create</button>
+        </form>
+
+      </div>
+      <div>
+        <h3>Blogs submitted</h3>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
     </div>
-    {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
-    )}
   </div>
   )
 
   return (
     <>
-    <div>{errorMessage}</div>
+    <div>{notification}</div>
     <div>
       {
       user === null
       ? loginForm()
-      : blogList()
+      : loggedInUI()
       }
     </div>
     </>
