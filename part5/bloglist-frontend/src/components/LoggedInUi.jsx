@@ -20,7 +20,7 @@ const LoggedInUi = ({user, setUser, setNotification}) => {
       }, [])
 
       
-      //const toggler = 
+      const toggler = ()=> {blogFormRef.current.toggleVisibility()}
       
     return (
         <div>
@@ -37,7 +37,7 @@ const LoggedInUi = ({user, setUser, setNotification}) => {
             <BlogForm setNotification = {setNotification}
                       setBlogs = {setBlogs}
                       user = {user}
-                      toggler = {()=>{blogFormRef.current.toggleVisibility()}} />
+                      toggler = {toggler} />
           </Switch>
           <div>
             <h3>Blogs submitted</h3>
