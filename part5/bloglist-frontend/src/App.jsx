@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import LoginForm from './components/loginForm'
 import LoggedInUi from './components/LoggedInUi'
+import Notification from './components/notification'
 
 
 const App = () => {
   
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
-  
+  const notificationRef = useRef()
+
+  const setNotification = (obj)=>{
+    notificationRef.current.notificationUpdate(obj)
+  }
   useEffect(()=>{
     const loggedInUserJson = localStorage.getItem("loggedInUser")
     if(loggedInUserJson){
@@ -20,7 +24,7 @@ const App = () => {
   return (
     <>
     <div>
-   {/*notification ? notificationComponent() : null*/ }
+      <Notification ref={notificationRef} />
     </div>
     <div>
       {
