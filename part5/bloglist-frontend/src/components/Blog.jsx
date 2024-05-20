@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react"
-import blogService from "../services/blogs"
+import { useEffect, useState } from 'react'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, user, setBlogs }) => {
 
   const[extendedView, setExtendedView] = useState(false)
   const [liked, setLiked] = useState(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     likeSetter()
-  }, [])
+  })
 
   const likeSetter = () => {
     if (blog.likedBy.includes(user.id)){
@@ -19,15 +19,15 @@ const Blog = ({ blog, user, setBlogs }) => {
     }
   }
 
-  const likeToggler = () =>{
+  const likeToggler = () => {
     setLiked(!liked)
   }
-  const viewToggler = () =>{
+  const viewToggler = () => {
     setExtendedView(!extendedView)
   }
 
-  const deleteHandler = async (id) =>{
-   if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}?`)){
+  const deleteHandler = async (id) => {
+    if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}?`)){
       const token = user.token
       console.log(token)
       blogService.setToken(token)
@@ -37,41 +37,41 @@ const Blog = ({ blog, user, setBlogs }) => {
     }
   }
 
-  const likeHandler = async (id) =>{
+  const likeHandler = async (id) => {
     blogService.setToken(user.token)
     await blogService.updateLikes(id)
     const updatedBlogs = await blogService.getAll()
     setBlogs(updatedBlogs)
     likeToggler()
-  
+
 
   }
   const blogStyle = {
-    border: "1px solid",
-    padding : "10px 0 0 2px",
+    border: '1px solid',
+    padding : '10px 0 0 2px',
     marginBottom : 5
   }
 
 
-  return ( extendedView 
-  ? <div style = {blogStyle }>
-    <p>{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
-    <p>{blog.url}</p>
-    <p> {blog.likedBy.length} likes<button onClick={()=>likeHandler(blog.id.toString())}>{liked === false? "Like": "Unlike" }</button></p>
-    <p><b>{blog.user.name}</b></p>
-    {user.username === blog.user.username? <button onClick={()=>deleteHandler(blog.id)}>Delete</button>: null }
-    
+  return ( extendedView
+    ? <div style = {blogStyle }>
+      <p>{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
+      <p>{blog.url}</p>
+      <p> {blog.likedBy.length} likes<button onClick={() => likeHandler(blog.id.toString())}>{liked === false? 'Like': 'Unlike' }</button></p>
+      <p><b>{blog.user.name}</b></p>
+      {user.username === blog.user.username? <button onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
 
-   </div> 
-  : <div style = {blogStyle}>
+
+    </div>
+    : <div style = {blogStyle}>
       {blog.title} <em> by </em> {blog.author}
       <button onClick={viewToggler}>View</button>
-    </div>  
+    </div>
   )
 
 
 }
-  
+
 
 
 export default Blog
