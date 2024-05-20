@@ -1,9 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-
-
 
 blogsRouter.get('/', async (req, res) => {
   try {
@@ -71,7 +68,7 @@ blogsRouter.put('/:id', async (req,res, next) =>{
       title: body.title,
       author: body.author,
       url: body.url,
-      likes: body.likes
+      likes: body.likedBy.length
 
     }
     const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {new:true})
@@ -81,6 +78,48 @@ blogsRouter.put('/:id', async (req,res, next) =>{
     next(err)
   }
 })
+
+blogsRouter.put('/:id/like', async (req,res,next) =>{
+  try{
+    const id = req.params.id.toString()
+    const user = req.user
+    if(!user){
+     return res.status(401).json({error: "unauthorised user"})
+    }
+    const likedBlog = await Blog.findById(id).populate("user")
+    const likingUser = await User.findById(user.id).populate('blogs')
+    let likes = likingUser.likes
+    let likedBy = likedBlog.likedBy
+
+    if(likes.includes(id)){
+      
+      const index = likes.indexOf(id)
+      likes.splice(index, 1)
+      await likingUser.save()
+      
+
+      const userIndex = likedBy.indexOf(likingUser._id.toString())
+      likedBy.splice(userIndex, 1)
+      await likedBlog.save()
+
+     return res.status(200).json({message : "Unliked"})
+
+    }
+    else if(!likes.includes(id)){
+      likes.push(id)
+      await likingUser.save()
+
+      likedBy.push(likingUser._id.toString())
+      await likedBlog.save()
+
+    return  res.status(200).json({message : "Liked"})
+
+    }
+
+
+  }catch (err){next(err)}
+
+} )
   
 
 module.exports = blogsRouter

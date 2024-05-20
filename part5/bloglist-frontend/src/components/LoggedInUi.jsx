@@ -42,7 +42,7 @@ const LoggedInUi = ({user, setUser, setNotification}) => {
           <div>
             <h3>Blogs submitted</h3>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} user={user} setBlogs = {setBlogs} />
             )}
           </div>
         </div>
