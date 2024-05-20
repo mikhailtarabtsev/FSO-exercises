@@ -7,8 +7,6 @@ import blogService from "../services/blogs"
 const LoggedInUi = ({user, setUser, setNotification}) => {
   const [blogs, setBlogs] = useState([])
   const blogsSorted = blogs.sort((a,b)=>  b.likedBy.length - a.likedBy.length)
-  console.log(blogs)
-  console.log(blogsSorted)
   const blogFormRef = useRef()
 
     const logOutHandler = () =>{

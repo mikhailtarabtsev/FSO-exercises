@@ -26,6 +26,17 @@ const Blog = ({ blog, user, setBlogs }) => {
     setExtendedView(!extendedView)
   }
 
+  const deleteHandler = async (id) =>{
+   if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}?`)){
+      const token = user.token
+      console.log(token)
+      blogService.setToken(token)
+      await blogService.remove(id)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    }
+  }
+
   const likeHandler = async (id) =>{
     blogService.setToken(user.token)
     await blogService.updateLikes(id)
@@ -41,7 +52,6 @@ const Blog = ({ blog, user, setBlogs }) => {
     marginBottom : 5
   }
 
-  
 
   return ( extendedView 
   ? <div style = {blogStyle }>
@@ -49,6 +59,8 @@ const Blog = ({ blog, user, setBlogs }) => {
     <p>{blog.url}</p>
     <p> {blog.likedBy.length} likes<button onClick={()=>likeHandler(blog.id.toString())}>{liked === false? "Like": "Unlike" }</button></p>
     <p><b>{blog.user.name}</b></p>
+    {user.username === blog.user.username? <button onClick={()=>deleteHandler(blog.id)}>Delete</button>: null }
+    
 
    </div> 
   : <div style = {blogStyle}>

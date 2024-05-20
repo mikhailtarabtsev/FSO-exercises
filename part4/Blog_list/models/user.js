@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Blog"
+            ref: 'Blog'
         }
     ],
 })

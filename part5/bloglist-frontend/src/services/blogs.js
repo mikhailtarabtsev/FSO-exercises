@@ -21,10 +21,20 @@ const create = async (newReq) =>{
 
 const updateLikes = async (id) =>{
   const config = {
-    headers: {Authorization: token}
+    headers:{Authorization: token}
   }
   const response = await axios.put(`${baseUrl}/${id}/like`,null, config)
   return response.data
 }
 
-export default { getAll, create, setToken, updateLikes }
+const remove = async (id) =>{
+  console.log(token, "axios token")
+  const config = {
+    headers:{Authorization: token}
+  }
+  console.log(config, "axios headers")
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
+export default { getAll, create, setToken, updateLikes, remove }
