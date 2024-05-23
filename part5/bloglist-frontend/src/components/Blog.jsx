@@ -54,8 +54,8 @@ const Blog = ({ blog, user, setBlogs }) => {
 
 
   return ( extendedView
-    ? <div style = {blogStyle }>
-      <p>{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
+    ? <div className = 'extended' data-testid = {blog.id} style = {blogStyle }>
+      <p >{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
       <p>{blog.url}</p>
       <p> {blog.likedBy.length} likes<button onClick={() => likeHandler(blog.id.toString())}>{liked === false? 'Like': 'Unlike' }</button></p>
       <p><b>{blog.user.name}</b></p>
@@ -63,7 +63,7 @@ const Blog = ({ blog, user, setBlogs }) => {
 
 
     </div>
-    : <div style = {blogStyle}>
+    : <div className='minimised' data-testid = {blog.id} style = {blogStyle}>
       {blog.title} <em> by </em> {blog.author}
       <button onClick={viewToggler}>View</button>
     </div>
