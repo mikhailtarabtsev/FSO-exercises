@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, setBlogs }) => {
+const Blog = ({ blog, user, setBlogs, likeHandler }) => {
 
   const[extendedView, setExtendedView] = useState(false)
   const [liked, setLiked] = useState(null)
@@ -37,7 +37,7 @@ const Blog = ({ blog, user, setBlogs }) => {
     }
   }
 
-  const likeHandler = async (id) => {
+  /*const likeHandler = async (id) => {
     blogService.setToken(user.token)
     await blogService.updateLikes(id)
     const updatedBlogs = await blogService.getAll()
@@ -46,6 +46,8 @@ const Blog = ({ blog, user, setBlogs }) => {
 
 
   }
+  This is commented out for the exercise purposes
+  */
   const blogStyle = {
     border: '1px solid',
     padding : '10px 0 0 2px',
@@ -57,7 +59,7 @@ const Blog = ({ blog, user, setBlogs }) => {
     ? <div className = 'extended' data-testid = {blog.id} style = {blogStyle }>
       <p >{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
       <p>{blog.url}</p>
-      <p> {blog.likedBy.length} likes<button onClick={() => likeHandler(blog.id.toString())}>{liked === false? 'Like': 'Unlike' }</button></p>
+      <p> {blog.likedBy.length} likes<button data-testid = "like" onClick={() => likeHandler(blog.id.toString())}>{liked === false? 'Like': 'Unlike' }</button></p>
       <p><b>{blog.user.name}</b></p>
       {user.username === blog.user.username? <button onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
 
