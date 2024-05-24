@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, user, setBlogs, likeHandler }) => {
+const Blog = ({ blog, user, setBlogs }) => {
 
   const[extendedView, setExtendedView] = useState(false)
   const [liked, setLiked] = useState(null)
@@ -37,7 +37,7 @@ const Blog = ({ blog, user, setBlogs, likeHandler }) => {
     }
   }
 
-  /*const likeHandler = async (id) => {
+  const likeHandler = async (id) => {
     blogService.setToken(user.token)
     await blogService.updateLikes(id)
     const updatedBlogs = await blogService.getAll()
@@ -46,8 +46,6 @@ const Blog = ({ blog, user, setBlogs, likeHandler }) => {
 
 
   }
-  This is commented out for the exercise purposes
-  */
   const blogStyle = {
     border: '1px solid',
     padding : '10px 0 0 2px',

@@ -3,21 +3,25 @@ import blogService from '../services/blogs'
 
 
 
-const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
+const BlogForm = ({ /*setNotification, setBlogs, user, toggler */ handleSubmit /*Props are changed for the testing purposes*/ }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const blogHandler = async (event) => {
-    event.preventDefault()
-    try{
-      blogService.setToken(user.token)
-      await blogService.create({ title, author, url })
+      event.preventDefault()
+   // try{
+      //blogService.setToken(user.token)
+      //await blogService.create({ title, author, url })
+
+      //this is changed to pass the exercise test
       setTitle('')
       setAuthor('')
       setUrl('')
-      const newBlogs =  await blogService.getAll()
+      handleSubmit({title, author, url})
+
+     /* const newBlogs =  await blogService.getAll()
       setBlogs(newBlogs)
       setNotification({ text: 'Blog has successfully been posted', error : false })
       toggler()
@@ -29,8 +33,9 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-    }
+    }*/
   }
+
 
   return (
     <>
@@ -39,6 +44,7 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
         <div>
           <b>Title:  </b>
           <input
+            placeholder='title'
             type="text"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
@@ -47,6 +53,7 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
         <div>
           <b>Author:  </b>
           <input
+            placeholder='author'
             type="text"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
@@ -55,11 +62,12 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
         <div>
           <b>Url:  </b>
           <input
+            placeholder='url'
             type="text"
             value={url}
             onChange={({ target }) => setUrl(target.value)} />
         </div>
-        <button style={{ margin:'15px 20px' }} type='submit'>Create</button>
+        <button  placeholder = 'submit' style={{ margin:'15px 20px' }} type='submit'>Create</button>
       </form>
     </>
   )
