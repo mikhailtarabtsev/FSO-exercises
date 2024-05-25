@@ -3,25 +3,21 @@ import blogService from '../services/blogs'
 
 
 
-const BlogForm = ({ /*setNotification, setBlogs, user, toggler */ handleSubmit /*Props are changed for the testing purposes*/ }) => {
+const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const blogHandler = async (event) => {
-      event.preventDefault()
-   // try{
-      //blogService.setToken(user.token)
-      //await blogService.create({ title, author, url })
-
-      //this is changed to pass the exercise test
+    event.preventDefault()
+    try{
+      blogService.setToken(user.token)
+      await blogService.create({ title, author, url })
       setTitle('')
       setAuthor('')
       setUrl('')
-      handleSubmit({title, author, url})
-
-     /* const newBlogs =  await blogService.getAll()
+      const newBlogs =  await blogService.getAll()
       setBlogs(newBlogs)
       setNotification({ text: 'Blog has successfully been posted', error : false })
       toggler()
@@ -33,7 +29,7 @@ const BlogForm = ({ /*setNotification, setBlogs, user, toggler */ handleSubmit /
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-    }*/
+    }
   }
 
 

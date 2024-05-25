@@ -13,19 +13,17 @@ test('Event handler with right details is called on submit', async () => {
   const author = screen.getByPlaceholderText('author')
   const url = screen.getByPlaceholderText('url')
   const submitButton = screen.getByText('Create')
-  
+
   const testData = {
-    title: "Test title",
-    author: "Test author",
-    url: "testurl.com"
+    title: 'Test title',
+    author: 'Test author',
+    url: 'testurl.com'
   }
 
   await clicker.type(title, testData.title )
   await clicker.type(author, testData.author)
   await clicker.type(url, testData.url)
   await clicker.click(submitButton)
-  
-  console.log(blogHandler.mock.calls[0][0])
   expect(blogHandler.mock.calls).toHaveLength(1)
   expect(blogHandler.mock.calls[0][0].title).toBe(testData.title)
   expect(blogHandler.mock.calls[0][0].author).toBe(testData.author)
