@@ -7,6 +7,8 @@ const Blog = ({ blog, user, setBlogs }) => {
   const [liked, setLiked] = useState(null)
 
   useEffect(() => {
+    console.log(user)
+    console.log("blog list", blog)
     likeSetter()
   })
 

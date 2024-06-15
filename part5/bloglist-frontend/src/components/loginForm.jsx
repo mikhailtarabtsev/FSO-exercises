@@ -25,7 +25,7 @@ const LoginForm = ({ setUser, setNotification }) => {
   }
 
   return (
-    <form onSubmit={loginHandler}>
+    <form data-testid = "login" onSubmit={loginHandler}>
 
       <h1>Log in to application</h1>
 
