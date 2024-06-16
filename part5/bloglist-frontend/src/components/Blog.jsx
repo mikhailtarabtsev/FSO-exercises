@@ -7,8 +7,6 @@ const Blog = ({ blog, user, setBlogs }) => {
   const [liked, setLiked] = useState(null)
 
   useEffect(() => {
-    console.log(user)
-    console.log("blog list", blog)
     likeSetter()
   })
 
@@ -31,7 +29,6 @@ const Blog = ({ blog, user, setBlogs }) => {
   const deleteHandler = async (id) => {
     if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}?`)){
       const token = user.token
-      console.log(token)
       blogService.setToken(token)
       await blogService.remove(id)
       const updatedBlogs = await blogService.getAll()
@@ -59,7 +56,7 @@ const Blog = ({ blog, user, setBlogs }) => {
     ? <div className = 'extended' data-testid = {blog.id} style = {blogStyle }>
       <p >{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
       <p>{blog.url}</p>
-      <p> {blog.likedBy.length} likes<button data-testid = "like" onClick={() => likeHandler(blog.id.toString())}>{liked === false? 'Like': 'Unlike' }</button></p>
+      <p> {blog.likedBy.length} likes<button data-testid = "like" onClick={() => likeHandler(blog.id)}>{liked === false? 'Like': 'Unlike' }</button></p>
       <p><b>{blog.user.name}</b></p>
       {user.username === blog.user.username? <button onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
 

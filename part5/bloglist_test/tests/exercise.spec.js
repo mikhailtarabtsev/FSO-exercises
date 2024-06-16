@@ -1,6 +1,7 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 const loginHelper = require("../helper/loginHelper")
 const userDb = require("../helper/testUsers")
+const blogHelper = require("../helper/blogHelper")
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -47,8 +48,11 @@ describe('Blog app', () => {
       const blogButton = page.getByText("Post a new blog")
       await expect(blogButton).toBeVisible()
       await blogButton.click()
+
       const blogForm = page.getByTestId("blogForm")
       await expect(blogForm).toBeVisible()
+
+
       const formTitle = page.getByTestId("title")
       const formAuthor = page.getByTestId("author")
       const formUrl = page.getByTestId("url")
@@ -57,10 +61,27 @@ describe('Blog app', () => {
       await formUrl.fill(testData.url)
       const submitButton = page.getByTestId("submit")
       await submitButton.click()
+
+
       const blog = page.getByText(testData.title)
       const notification = page.getByText("Blog has successfully been posted")
       await expect(blog).toBeVisible()
       await expect(notification).toBeVisible()
+    })
+
+    test('Blogs can be liked', async ({page})=>{
+      blogHelper({page})
+      const viewButton = page.getByText("View")
+      await viewButton.click()
+      await expect(page.getByText("0 likes")).toBeVisible()
+      const likeButton = page.getByTestId("like")
+      await likeButton.click()
+      await expect(page.getByText("1 likes")).toBeVisible()
+      await likeButton.click()
+      await expect(page.getByText("0 likes")).toBeVisible()
+
+
+
     })
   })
 })
