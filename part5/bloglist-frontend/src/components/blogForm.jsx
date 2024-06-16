@@ -35,11 +35,14 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
 
   return (
     <>
-      <form onSubmit={blogHandler}>
+      <form
+        data-testid = "blogForm"
+        onSubmit={blogHandler}>
         <h3>Make an new blog</h3>
         <div>
           <b>Title:  </b>
           <input
+            data-testid = "title"
             placeholder='title'
             type="text"
             value={title}
@@ -49,6 +52,7 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
         <div>
           <b>Author:  </b>
           <input
+            data-testid = "author"
             placeholder='author'
             type="text"
             value={author}
@@ -58,12 +62,13 @@ const BlogForm = ({ setNotification, setBlogs, user, toggler }) => {
         <div>
           <b>Url:  </b>
           <input
+            data-testid = "url"
             placeholder='url'
             type="text"
             value={url}
             onChange={({ target }) => setUrl(target.value)} />
         </div>
-        <button  placeholder = 'submit' style={{ margin:'15px 20px' }} type='submit'>Create</button>
+        <button data-testid = "submit" placeholder = 'submit' style={{ margin:'15px 20px' }} type='submit'>Create</button>
       </form>
     </>
   )

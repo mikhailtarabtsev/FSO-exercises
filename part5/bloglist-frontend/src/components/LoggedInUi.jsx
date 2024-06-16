@@ -32,6 +32,7 @@ const LoggedInUi = ({ user, setUser, setNotification }) => {
       </div>
       <div>
         <Switch
+          data-testid = "post"
           label = "Post a new blog"
           ref = {blogFormRef}
         >
