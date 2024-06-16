@@ -25,13 +25,14 @@ const LoginForm = ({ setUser, setNotification }) => {
   }
 
   return (
-    <form data-testid = "login" onSubmit={loginHandler}>
+    <form data-testid = "loginForm" onSubmit={loginHandler}>
 
       <h1>Log in to application</h1>
 
       <div>
         <h3>Username</h3>
         <input
+          data-testid = "username"
           type="text"
           value={username}
           onChange={({ target }) => setUsername(target.value)}
@@ -40,12 +41,13 @@ const LoginForm = ({ setUser, setNotification }) => {
       <div>
         <h3>Password </h3>
         <input
+          data-testid = "password"
           type="password"
           value={password}
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">Log In</button>
+      <button data-testid = "loginButton" type="submit">Log In</button>
     </form>
   )
 }

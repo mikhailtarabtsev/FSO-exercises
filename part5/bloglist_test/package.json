@@ -7,7 +7,7 @@
     "test": "playwright test",
     "test:report" : "playwright show-report",
     "frontend" : "cd ../bloglist-frontend && npm run dev",
-    "backend" : "cd ../bloglist-frontend && npm run backend"
+    "backend" : "cd ../../part4/Blog_list && npm run test-env"
   },
   "author": "",
   "license": "ISC",
