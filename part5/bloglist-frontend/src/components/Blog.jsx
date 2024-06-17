@@ -58,7 +58,7 @@ const Blog = ({ blog, user, setBlogs }) => {
       <p>{blog.url}</p>
       <p> {blog.likedBy.length} likes<button data-testid = "like" onClick={() => likeHandler(blog.id)}>{liked === false? 'Like': 'Unlike' }</button></p>
       <p><b>{blog.user.name}</b></p>
-      {user.username === blog.user.username? <button onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
+      {user.username === blog.user.username? <button data-testid="delete" onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
 
 
     </div>

@@ -79,8 +79,16 @@ describe('Blog app', () => {
       await expect(page.getByText("1 likes")).toBeVisible()
       await likeButton.click()
       await expect(page.getByText("0 likes")).toBeVisible()
+    })
 
-
+    test('Blog can be deleted by the author', async ({page})=>{
+      blogHelper({page})
+      const viewButton = page.getByText("View")
+      await viewButton.click()
+      const deleteButton = page.getByTestId("delete")
+      page.on('dialog',  dialog => dialog.accept() )
+      await deleteButton.click()
+      expect(page.getByText("test title")).not.toBeVisible()
 
     })
   })
