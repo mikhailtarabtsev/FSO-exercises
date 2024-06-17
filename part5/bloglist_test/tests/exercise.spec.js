@@ -88,7 +88,20 @@ describe('Blog app', () => {
       const deleteButton = page.getByTestId("delete")
       page.on('dialog',  dialog => dialog.accept() )
       await deleteButton.click()
-      expect(page.getByText("test title")).not.toBeVisible()
+      await expect(page.getByText("test title")).not.toBeVisible()
+
+    })
+
+    test('Only blog author can see the delete button', async ({page, request})=>{
+      await loginHelper.createWithUserIndex(request, 0)
+      await blogHelper({page})
+      const logoutButton = page.getByTestId('logout')
+      await logoutButton.click()    
+      await loginHelper.loginWithUserIndex(page, 0)
+      await expect(page.getByText("Mikhail Tarabtsev")).toBeVisible()
+      const viewButton = page.getByText("View")
+      await viewButton.click()
+      await expect(page.getByTestId("delete")).not.toBeVisible()
 
     })
   })

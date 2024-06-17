@@ -28,7 +28,7 @@ const LoggedInUi = ({ user, setUser, setNotification }) => {
       <h2>Blogs</h2>
       <div>
         <p><b>{user.name}</b> logged in</p>
-        <button onClick = {logOutHandler}>Log out</button>
+        <button data-testid = "logout" onClick = {logOutHandler}>Log out</button>
       </div>
       <div>
         <Switch
