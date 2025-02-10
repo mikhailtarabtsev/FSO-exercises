@@ -11,10 +11,10 @@ const Blog = ({ blog, user, setBlogs }) => {
   })
 
   const likeSetter = () => {
-    if (blog.likedBy.includes(user.id)){
+    if (blog.likedBy.includes(user.username)){
       setLiked(true)
     }
-    else if(!blog.likedBy.includes(user.id)){
+    else{
       setLiked(false)
     }
   }
@@ -42,9 +42,8 @@ const Blog = ({ blog, user, setBlogs }) => {
     const updatedBlogs = await blogService.getAll()
     setBlogs(updatedBlogs)
     likeToggler()
-
-
   }
+
   const blogStyle = {
     border: '1px solid',
     padding : '10px 0 0 2px',
@@ -53,16 +52,14 @@ const Blog = ({ blog, user, setBlogs }) => {
 
 
   return ( extendedView
-    ? <div className = 'extended' data-testid = {blog.id} style = {blogStyle }>
-      <p >{blog.title}<em> by </em>{blog.author} <button onClick={viewToggler}>Hide</button></p>
+  ? <div className = 'extended' data-testid = {"blogpost-m"} style = {blogStyle }>
+      <p >{blog.title}<em> by </em>{blog.author} <button data-testid = "hide-button" onClick={viewToggler}>Hide</button></p>
       <p>{blog.url}</p>
-      <p> {blog.likedBy.length} likes<button data-testid = "like" onClick={() => likeHandler(blog.id)}>{liked === false? 'Like': 'Unlike' }</button></p>
+     <div> <p data-testid ="like-display"> {blog.likedBy.length} likes</p><button data-testid = "like" onClick={() => likeHandler(blog.id)}>{liked ? 'Unlike': 'Like' }</button></div>
       <p><b>{blog.user.name}</b></p>
       {user.username === blog.user.username? <button data-testid="delete" onClick={() => deleteHandler(blog.id)}>Delete</button>: null }
-
-
     </div>
-    : <div className='minimised' data-testid = {blog.id} style = {blogStyle}>
+  : <div className='minimised' data-testid = {"blogpost-s"} style = {blogStyle}>
       {blog.title} <em> by </em> {blog.author}
       <button onClick={viewToggler}>View</button>
     </div>

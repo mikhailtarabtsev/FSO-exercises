@@ -19,10 +19,13 @@ blogsRouter.post('/', async (req, res, next) => {
       return res.status(401).json({error: "You need to be logged in"})
     }
     const user = req.user
-    const likedBy = body.likedBy.length !== 0
-     ? body.likedBy.map(id => new mongoose.Types.ObjectId(id))
-      : [];
 
+
+    let likedBy = []
+
+    if(process.env.NODE_ENV === "test" && body.likedBy && body.likedBy.length !==0){
+      likedBy = body.likedBy.map(username=>username)
+    }
 
     const blog = new Blog({
       title: body.title,
@@ -99,24 +102,29 @@ blogsRouter.put('/:id/like', async (req,res,next) =>{
   try{
     const id = req.params.id.toString()
     const user = req.user
+
     if(!user){
      return res.status(401).json({error: "unauthorised user"})
     }
+
+
     const likedBlog = await Blog.findById(id).populate("user")
     const likingUser = await User.findById(user.id).populate('blogs')
+
+    let username = likingUser.username
     let likes = likingUser.likes
     let likedBy = likedBlog.likedBy
 
-    if(likes.includes(id)){
+    if(likedBy.includes(username)){
       
-      const index = likes.indexOf(id)
-      likes.splice(index, 1)
-      await likingUser.save()
-      
-
-      const userIndex = likedBy.indexOf(likingUser._id.toString())
-      likedBy.splice(userIndex, 1)
+      const userIndex = likedBy.indexOf(username)
+      likedBy.splice(userIndex,1 )
       await likedBlog.save()
+
+      const blogIndex = likes.indexOf(id)
+      likes.splice(blogIndex, 1)
+      await likingUser.save()
+
 
      return res.status(200).json({message : "Unliked"})
 
@@ -125,7 +133,7 @@ blogsRouter.put('/:id/like', async (req,res,next) =>{
       likes.push(id)
       await likingUser.save()
 
-      likedBy.push(likingUser._id.toString())
+      likedBy.push(username)
       await likedBlog.save()
 
     return  res.status(200).json({message : "Liked"})
