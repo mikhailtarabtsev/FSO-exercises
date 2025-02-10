@@ -2,12 +2,13 @@ const { test, expect, beforeEach, describe } = require('@playwright/test')
 const loginHelper = require("../helper/loginHelper")
 const userDb = require("../helper/testUsers")
 const blogHelper = require("../helper/blogHelper")
+const { strict } = require('assert')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post("api/test/reset")
     await loginHelper.createWithUserIndex(request, 1)
-    await page.goto('/')
+   // await page.goto('/')
   })
 
   test('Login form is shown', async ({ page }) => {
@@ -70,7 +71,7 @@ describe('Blog app', () => {
     })
 
     test('Blogs can be liked', async ({page})=>{
-      blogHelper({page})
+      blogHelper.singleBlogHelper({page})
       const viewButton = page.getByText("View")
       await viewButton.click()
       await expect(page.getByText("0 likes")).toBeVisible()
@@ -82,7 +83,7 @@ describe('Blog app', () => {
     })
 
     test('Blog can be deleted by the author', async ({page})=>{
-      blogHelper({page})
+      blogHelper.singleBlogHelper({page})
       const viewButton = page.getByText("View")
       await viewButton.click()
       const deleteButton = page.getByTestId("delete")
@@ -94,7 +95,7 @@ describe('Blog app', () => {
 
     test('Only blog author can see the delete button', async ({page, request})=>{
       await loginHelper.createWithUserIndex(request, 0)
-      await blogHelper({page})
+      await blogHelper.singleBlogHelper({page})
       const logoutButton = page.getByTestId('logout')
       await logoutButton.click()    
       await loginHelper.loginWithUserIndex(page, 0)
@@ -104,5 +105,41 @@ describe('Blog app', () => {
       await expect(page.getByTestId("delete")).not.toBeVisible()
 
     })
+  })
+
+  test.only('Blogs are organised by likes', async ({page}, req, res)=>{
+    const login = await loginHelper.loginWithApi(req, res)
+    await blogHelper.tripleBlogHelper(login)
+    await page.goto('/')
+    await loginHelper.loginWithUserIndex(page, 1)
+
+    await page.waitForSelector('[data-testid="blogpost-s"]')
+    const blogsByDataId = await page.getByTestId('blogpost-s').all();
+    expect(blogsByDataId.length).toBe(3)
+
+    const likes = []
+
+    for(const blog of blogsByDataId) {
+
+      await blog.getByText("View").click({force:true})
+      await page.waitForSelector('[data-testid="blogpost-m"]')
+  
+
+      const likeDisplay = await page.getByTestId("like-display").innerText()
+
+      const likesNum = parseInt(await likeDisplay.match(/\d+/)[0], 10)
+
+      likes.push(likesNum)
+      await page.waitForSelector('[data-testid="hide-button"]')
+
+      await page.getByTestId("hide-button").click({ force: true });
+      await page.waitForSelector('[data-testid="blogpost-s"]', { state: 'visible' });
+
+    }
+    
+    const patternDescending = likes.every((like, index, array)=>  index === 0 || like <= array[index-1]
+  
+    )
+    expect(patternDescending).toBe(true)
   })
 })

@@ -1,12 +1,14 @@
 POST http://localhost:3000/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVuY2xlTWlrZSIsImlkIjoiNjYxYzJjNzYyMGMxOWEwNDdmNjIwNjExIiwiaWF0IjoxNzE1Nzc5ODk2fQ.-qgT1-sIHclkYKrPW10YV_XuskuHX6ypqeo2c_A4eNM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBpY2tsZSBSaWNrIiwiaWQiOiI2NzdiYzgwY2M1MjQyZGQ5M2Q1NDQzMWYiLCJpYXQiOjE3MzYxNjYwNjl9.J-hzdR0BUIk8QL7V9ewPC5VgBDHdqAjrdp8wb0RT-ZY
 
 { 
-    "title": "And for a good measure again",
+    "title": "this has 5 likes",
     "author": "Uncle Mike",
-    "url": "flsadasdd"
+    "url": "flsadasdd",
+    "likedBy": ["661c2c7620c19a047f620611", "677b907baf20bacc735e9542","677b90936f44c7ef999b73ba","677b90a1214a64c7f4b225bc","677b911592804d10640e8ccc","677b911eb8bd8f8988c949e6" ]
 }
+
 ###
 POST http://localhost:3000/api/users
 Content-Type: application/json

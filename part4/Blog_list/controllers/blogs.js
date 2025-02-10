@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const mongoose = require("mongoose")
 
 blogsRouter.get('/', async (req, res) => {
   try {
@@ -18,12 +19,18 @@ blogsRouter.post('/', async (req, res, next) => {
       return res.status(401).json({error: "You need to be logged in"})
     }
     const user = req.user
+    const likedBy = body.likedBy.length !== 0
+     ? body.likedBy.map(id => new mongoose.Types.ObjectId(id))
+      : [];
+
+
     const blog = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
-      user : user.id
-
+      user : user.id,
+      likedBy: likedBy
+      
     })
         if(!req.body.title){
           res.status(400).end()
